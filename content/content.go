@@ -9,35 +9,41 @@
 // Use of this source code is governed by the UniDoc End User License Agreement
 // terms that can be accessed at https://unidoc.io/eula/
 
-package content ;import (_c "archive/zip";_fb "bytes";_f "encoding/json";_e "golang.org/x/xerrors";_ac "io/ioutil";_cd "net/url";_a "os";_g "strings";);
+package content ;import (_e "archive/zip";_ba "bytes";_de "encoding/json";_db "golang.org/x/xerrors";_a "io/ioutil";_b "net/url";_eb "os";_eg "strings";);type zipDirectory struct{_bdd _ba .Buffer ;_dc *_e .Writer ;};
 
-// ContentType implements Content interface.
-func (_cdd *webURL )ContentType ()string {return "\u0061\u0070p\u006c\u0069\u0063a\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e";};
+// NewHTMLFile creates new Content htmFile for provided input path.
+func NewHTMLFile (path string )(Content ,error ){_f ,_bf :=_eb .Open (path );if _bf !=nil {return nil ,_bf ;};_bc :=&htmFile {_g :_ba .Buffer {}};if _ ,_bf =_bc ._g .ReadFrom (_f );_bf !=nil {return nil ,_bf ;};return _bc ,nil ;};
 
 // Data implements Content interface.
-func (_ga *zipDirectory )Data ()[]byte {return _ga ._bf .Bytes ()};
+func (_ga *webURL )Data ()[]byte {return _ga ._bd };type htmFile struct{_g _ba .Buffer };
+
+// ContentType implements Content interface.
+func (_ae *htmFile )ContentType ()string {return "\u0074e\u0078\u0074\u002f\u0068\u0074\u006dl"};
+
+// ContentType implements Content interface.
+func (_bab *zipDirectory )ContentType ()string {return "\u0061p\u0070l\u0069\u0063\u0061\u0074\u0069\u006f\u006e\u002f\u007a\u0069\u0070";};type webURL struct{_bg string ;_bd []byte ;};
 
 // NewWebURL creates new Content webURL for provided input URL path.
-func NewWebURL (path string )(Content ,error ){if _ ,_ff :=_cd .Parse (path );_ff !=nil {return nil ,_ff ;};type urlOutput struct{URL string `json:"url"`;};_eb :=urlOutput {URL :path };_ae ,_fff :=_f .Marshal (_eb );if _fff !=nil {return nil ,_fff ;};return &webURL {_dd :path ,_cf :_ae },nil ;};
-
-// ContentType implements Content interface.
-func (_ab *zipDirectory )ContentType ()string {return "\u0061p\u0070l\u0069\u0063\u0061\u0074\u0069\u006f\u006e\u002f\u007a\u0069\u0070";};func (_ca *zipDirectory )zipBasePaths (_ge _a .FileInfo ,_ega ,_eeb string ,_bfa bool ,_gg *_g .Builder )(string ,string ){_gg .WriteString (_ega );if !_g .HasSuffix (_ega ,"\u002f"){_gg .WriteRune ('/');};_gg .WriteString (_ge .Name ());if _bfa {_gg .WriteRune ('/');};_ged :=_gg .String ();_gg .Reset ();_gg .WriteString (_eeb );_gg .WriteString (_ge .Name ());if _bfa {_gg .WriteRune ('/');};_ad :=_gg .String ();_gg .Reset ();return _ged ,_ad ;};
+func NewWebURL (path string )(Content ,error ){if _ ,_dec :=_b .Parse (path );_dec !=nil {return nil ,_dec ;};type urlOutput struct{URL string `json:"url"`;};_ac :=urlOutput {URL :path };_bad ,_ab :=_de .Marshal (_ac );if _ab !=nil {return nil ,_ab ;};
+return &webURL {_bg :path ,_bd :_bad },nil ;};
 
 // Data implements Content interface.
-func (_acc *webURL )Data ()[]byte {return _acc ._cf };
+func (_ef *zipDirectory )Data ()[]byte {return _ef ._bdd .Bytes ()};func (_eaf *zipDirectory )zipBasePaths (_gb _eb .FileInfo ,_bdg ,_dae string ,_ad bool ,_dcd *_eg .Builder )(string ,string ){_dcd .WriteString (_bdg );if !_eg .HasSuffix (_bdg ,"\u002f"){_dcd .WriteRune ('/');
+};_dcd .WriteString (_gb .Name ());if _ad {_dcd .WriteRune ('/');};_gacc :=_dcd .String ();_dcd .Reset ();_dcd .WriteString (_dae );_dcd .WriteString (_gb .Name ());if _ad {_dcd .WriteRune ('/');};_fe :=_dcd .String ();_dcd .Reset ();return _gacc ,_fe ;
+};
+
+// Data implements Content interface.
+func (_da *htmFile )Data ()[]byte {return _da ._g .Bytes ()};
 
 // Content is an interface used for putting the content into Client Query.
 type Content interface{ContentType ()string ;Data ()[]byte ;};
 
 // ContentType implements Content interface.
-func (_da *htmFile )ContentType ()string {return "\u0074e\u0078\u0074\u002f\u0068\u0074\u006dl"};
+func (_fdb *webURL )ContentType ()string {return "\u0061\u0070p\u006c\u0069\u0063a\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e";};
 
 // NewZipDirectory creates new zip compressed file that recursively reads the directory at the 'dirPath'
 // and stores in it's in-memory buffer.
-func NewZipDirectory (dirPath string )(Content ,error ){_gbb :=&zipDirectory {_bf :_fb .Buffer {}};_gbb ._fe =_c .NewWriter (&_gbb ._bf );if _ee :=_gbb .zipPath (dirPath ,"");_ee !=nil {return nil ,_ee ;};if _dc :=_gbb ._fe .Close ();_dc !=nil {return nil ,_dc ;};return _gbb ,nil ;};type webURL struct{_dd string ;_cf []byte ;};
-
-// Data implements Content interface.
-func (_gb *htmFile )Data ()[]byte {return _gb ._d .Bytes ()};func (_eg *zipDirectory )zipPath (_cc ,_gaa string )error {_de ,_cfb :=_ac .ReadDir (_cc );if _cfb !=nil {return _e .Errorf ("\u0072\u0065\u0061di\u006e\u0067\u0020\u0064\u0069\u0072\u0065\u0063\u0074o\u0072y\u003a \u0027%\u0073\u0027\u0020\u0066\u0061\u0069\u006c\u0065\u0064\u003a\u0020\u0025\u0077",_cc ,_cfb );};_fc :=&_g .Builder {};for _ ,_ce :=range _de {_df ,_gf :=_eg .zipBasePaths (_ce ,_cc ,_gaa ,_ce .IsDir (),_fc );if _ce .IsDir (){if _acd :=_eg .zipPath (_df ,_gf );_acd !=nil {return _acd ;};continue ;};_fcd ,_beg :=_ac .ReadFile (_df );if _beg !=nil {return _beg ;};_ebg ,_beg :=_eg ._fe .Create (_gf );if _beg !=nil {return _beg ;};if _ ,_beg =_ebg .Write (_fcd );_beg !=nil {return _beg ;};};return nil ;};type htmFile struct{_d _fb .Buffer };
-
-// NewHTMLFile creates new Content htmFile for provided input path.
-func NewHTMLFile (path string )(Content ,error ){_aa ,_be :=_a .Open (path );if _be !=nil {return nil ,_be ;};_af :=&htmFile {_d :_fb .Buffer {}};if _ ,_be =_af ._d .ReadFrom (_aa );_be !=nil {return nil ,_be ;};return _af ,nil ;};type zipDirectory struct{_bf _fb .Buffer ;_fe *_c .Writer ;};
+func NewZipDirectory (dirPath string )(Content ,error ){_ea :=&zipDirectory {_bdd :_ba .Buffer {}};_ea ._dc =_e .NewWriter (&_ea ._bdd );if _fb :=_ea .zipPath (dirPath ,"");_fb !=nil {return nil ,_fb ;};if _aa :=_ea ._dc .Close ();_aa !=nil {return nil ,_aa ;
+};return _ea ,nil ;};func (_bb *zipDirectory )zipPath (_ebf ,_c string )error {_cg ,_gaa :=_a .ReadDir (_ebf );if _gaa !=nil {return _db .Errorf ("\u0072\u0065\u0061di\u006e\u0067\u0020\u0064\u0069\u0072\u0065\u0063\u0074o\u0072y\u003a \u0027%\u0073\u0027\u0020\u0066\u0061\u0069\u006c\u0065\u0064\u003a\u0020\u0025\u0077",_ebf ,_gaa );
+};_gf :=&_eg .Builder {};for _ ,_gc :=range _cg {_ebb ,_gac :=_bb .zipBasePaths (_gc ,_ebf ,_c ,_gc .IsDir (),_gf );if _gc .IsDir (){if _fg :=_bb .zipPath (_ebb ,_gac );_fg !=nil {return _fg ;};continue ;};_eag ,_fa :=_a .ReadFile (_ebb );if _fa !=nil {return _fa ;
+};_cd ,_fa :=_bb ._dc .Create (_gac );if _fa !=nil {return _fa ;};if _ ,_fa =_cd .Write (_eag );_fa !=nil {return _fa ;};};return nil ;};
