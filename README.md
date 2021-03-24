@@ -34,10 +34,30 @@ This plugin works in a pair with the UniHTML server. It is distributed using Doc
 
 1. Get UniHTML-Server Docker image: 
    `docker pull unidoccloud/unihtml:latest`
-2. Start UniHTML server with some output port defined: `docker run -p 8080:8080 -e UNIHTML_LICENSE=path/to/license unidoccloud/unihtml`
+2. Start UniHTML server with some output port defined: 
+   ```shell 
+   docker run -p 8080:8080 -e UNIHTML_LICENSE_PATH=path/to/license -e UNIHTML_CUSTOMER_NAME=customer_name unidoccloud/unihtml
+   ```
 3. Define environment variable: `UNIPDF_LICENSE_PATH` with the path to the UniDoc license.
 4. Define environment variable: `UNIPDF_CUSTOMER_NAME` with your customer name matching your license.
-5. Get latest version of the `github.com/unidoc/unipdf/v3` module: `go get github.com/unidoc/unipdf/v3`
+5. Get the latest version of the `github.com/unidoc/unipdf/v3` module: `go get github.com/unidoc/unipdf/v3`
+
+## UniHTML Server Licenses
+
+UniHTML Server accepts both the offline and metered UniDoc licenses. A license with a UniHTML module is required to run both the server and client.
+
+### UniHTML Offline License
+
+A regular license could be set on the server by setting one of two possible environment variables: 
+- `UNIHTML_LICENSE_PATH` - the value should be the path to the UniDoc license file with the UniHTML module.
+- `UNIHTML_LICENSE` - full content of valid UniDoc license with the UniHTML module.
+
+This license kind requires also an environment variable `UNIHTML_CUSTOMER_NAME` which defines the customer name provided with the UniDoc license. 
+
+### UniDoc Metered License
+
+UniHTML Server accepts also a UniDoc metered license. This could be set by providing you **API Key** in the environment variable:
+- `UNIDOC_METERED_API_KEY` - the value of this variable should be an **API Key** matched to your license.
 
 ## Usage
 
