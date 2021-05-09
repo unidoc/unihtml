@@ -3,10 +3,12 @@
 [UniDoc](https://unidoc.io) UniHTML is a [UniPDF](https://github.com/unidoc/unipdf) library plugin module with capability 
 of extracting and converting HTML files and inject into PDF document.
 
+For the golang documentation check: [GoDoc](https://apidocs.unidoc.io/unihtml/latest).
+
 It requires a UniHTML Server component to work. Visit [https://unidoc.io](https://unidoc.io). 
 
 [![License: UniDoc EULA](https://img.shields.io/badge/license-UniDoc%20EULA-blue)](https://unidoc.io/eula/)
-[![GoDoc](https://godoc.org/github.com/unidoc/unipdf?status.svg)](https://godoc.org/github.com/unidoc/unihtml)
+[![GoDoc](https://godoc.org/github.com/unidoc/unipdf?status.svg)](https://apidocs.unidoc.io/unihtml/latest/)
 
 ## Features
 
