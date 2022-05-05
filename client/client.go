@@ -11,198 +11,198 @@
 
 // Package client contains HTML Converter HTTP Client. The Client implements htmlcreator.HTMLConverter interface
 // for the UniPDF module and can be used as a plugin for the UniPDF creator.Creator.
-package client ;import (_bb "bytes";_fb "compress/flate";_db "compress/gzip";_d "context";_a "encoding/json";_b "errors";_eg "fmt";_dg "github.com/unidoc/unihtml/content";_bd "github.com/unidoc/unihtml/selector";_dc "github.com/unidoc/unihtml/sizes";_fe "github.com/unidoc/unipdf/v3/common";
-_ea "golang.org/x/xerrors";_f "io/ioutil";_fcf "net";_e "net/http";_fc "net/url";_bg "strconv";_c "strings";_af "time";);
+package client ;import (_db "bytes";_b "compress/flate";_cc "compress/gzip";_e "context";_ee "encoding/json";_d "errors";_gcg "fmt";_adf "github.com/unidoc/unihtml/content";_eb "github.com/unidoc/unihtml/selector";_gf "github.com/unidoc/unihtml/sizes";
+_bg "github.com/unidoc/unipdf/v3/common";_c "io/ioutil";_ccf "net";_ea "net/http";_gc "net/url";_ge "strconv";_g "strings";_ad "time";);
 
-// WaitReady waits for the selector to get ready - 'loaded'.
-func (_eee *QueryBuilder )WaitReady (selector string ,by _bd .ByType )*QueryBuilder {_eee ._cb .RenderParameters .WaitReady =append (_eee ._cb .RenderParameters .WaitReady ,BySelector {Selector :selector ,By :by });return _eee ;};var (ErrNotFound =_b .New ("\u006eo\u0074\u0020\u0066\u006f\u0075\u006ed");
-ErrBadRequest =_b .New ("b\u0061\u0064\u0020\u0072\u0065\u0071\u0075\u0065\u0073\u0074");ErrNotImplemented =_b .New ("\u006eo\u0074 \u0069\u006d\u0070\u006c\u0065\u006d\u0065\u006e\u0074\u0065\u0064");ErrInternalError =_b .New ("i\u006e\u0074\u0065\u0072na\u006c \u0073\u0065\u0072\u0076\u0065r\u0020\u0065\u0072\u0072\u006f\u0072");
-ErrBadGateway =_b .New ("b\u0061\u0064\u0020\u0067\u0061\u0074\u0065\u0077\u0061\u0079");ErrUnauthorized =_b .New ("\u0075\u006e\u0061u\u0074\u0068\u006f\u0072\u0069\u007a\u0065\u0064");ErrTimedOut =_b .New ("\u0072\u0065\u0071\u0075\u0065\u0073\u0074\u0020\u0074\u0069\u006d\u0065d\u0020\u006f\u0075\u0074");
-);type generatePDFRequestV1 struct{Content []byte `json:"content"`;ContentType string `json:"contentType"`;ContentURL string `json:"contentURL"`;Method string `json:"method"`;ExpiresAt int64 `json:"expiresAt"`;PageParameters ;RenderParameters ;};
-
-// Validate checks validity of the selector.
-func (_ee BySelector )Validate ()error {if _ee .Selector ==""{return _b .New ("\u0070\u0072\u006fvi\u0064\u0065\u0064\u0020\u0065\u006d\u0070\u0074\u0079\u0020\u0073\u0065\u006c\u0065\u0063\u0074\u006f\u0072");};if _fca :=_ee .By .Validate ();_fca !=nil {return _fca ;
-};return nil ;};
-
-// RenderParameters are the parameters related with the rendering.
-type RenderParameters struct{WaitTime _af .Duration `schema:"minimum-load-time" json:"waitTime"`;WaitReady []BySelector `json:"waitReady"`;WaitVisible []BySelector `json:"waitVisible"`;};
-
-// BySelector is a structure that defines a selector with it's query 'by' type.
-type BySelector struct{Selector string `json:"selector"`;By _bd .ByType `json:"by"`;};
-
-// Query is a structure that contains query parameters and the content used for the HTMLConverter conversion process.
-type Query struct{Content []byte ;ContentType string ;URL string ;Method string ;PageParameters PageParameters ;RenderParameters RenderParameters ;};func (_gb *Client )setQueryValues (_ffc *_e .Request ,_ce *Query ){_afb :=_ffc .URL .Query ();_dgb :=_ce .PageParameters ;
-if _dgb .PageSize !=nil {_afb .Set ("\u0070a\u0067\u0065\u002d\u0073\u0069\u007ae",_dgb .PageSize .String ());};if _dgb .PaperHeight !=nil {_afb .Set ("\u0070\u0061\u0070e\u0072\u002d\u0068\u0065\u0069\u0067\u0068\u0074",_dgb .PaperHeight .String ());};
-if _dgb .PaperWidth !=nil {_afb .Set ("p\u0061\u0070\u0065\u0072\u002d\u0077\u0069\u0064\u0074\u0068",_dgb .PaperWidth .String ());};if _dgb .MarginTop !=nil {_afb .Set ("\u006d\u0061\u0072\u0067\u0069\u006e\u002d\u0074\u006f\u0070",_dgb .MarginTop .String ());
-};if _dgb .MarginBottom !=nil {_afb .Set ("\u006d\u0061\u0072\u0067\u0069\u006e\u002d\u0062\u006f\u0074\u0074\u006f\u006d",_dgb .MarginBottom .String ());};if _dgb .MarginRight !=nil {_afb .Set ("\u006d\u0061\u0072g\u0069\u006e\u002d\u0072\u0069\u0067\u0068\u0074",_dgb .MarginRight .String ());
-};if _dgb .MarginLeft !=nil {_afb .Set ("m\u0061\u0072\u0067\u0069\u006e\u002d\u006c\u0065\u0066\u0074",_dgb .MarginLeft .String ());};if _dgb .Orientation ==_dc .Landscape {_afb .Set ("o\u0072\u0069\u0065\u006e\u0074\u0061\u0074\u0069\u006f\u006e",_dgb .Orientation .String ());
-};if _ce .RenderParameters .WaitTime !=0{_afb .Set ("\u006d\u0069\u006e\u0069\u006d\u0075\u006d\u002d\u006c\u006f\u0061\u0064-\u0074\u0069\u006d\u0065",_bg .FormatInt (int64 (_ce .RenderParameters .WaitTime /_af .Millisecond ),10));};_ffc .URL .RawQuery =_afb .Encode ();
-};
+// New creates new client with provided options.
+func New (o Options )*Client {o .DefaultTimeout =_ad .Second *30;if o .Port <=0{o .Port =8080;};if o .Hostname ==""{o .Hostname ="\u00312\u0037\u002e\u0030\u002e\u0030\u002e1";};var _fb =&_ea .Transport {DialContext :(&_ccf .Dialer {Timeout :5*_ad .Second }).DialContext ,TLSHandshakeTimeout :5*_ad .Second };
+_bg .Log .Info ("\u0043l\u0069e\u006e\u0074\u0020\u0041\u0064\u0064\u0072\u003a\u0020\u0025\u0073",o .Addr ());return &Client {Options :o ,Client :&_ea .Client {Transport :_fb ,Timeout :o .DefaultTimeout }};};
 
 // Query gets the Query from provided query builder. If some error occurred during build process
 // or the input is not valid the function would return an error.
-func (_cf *QueryBuilder )Query ()(*Query ,error ){if _da :=_cf .Validate ();_da !=nil {return nil ,_da ;};return &_cf ._cb ,nil ;};
+func (_cd *QueryBuilder )Query ()(*Query ,error ){if _efd :=_cd .Validate ();_efd !=nil {return nil ,_efd ;};return &_cd ._dbc ,nil ;};
 
-// MarginLeft sets up the MarginLeft parameter for the query.
-func (_cbf *QueryBuilder )MarginLeft (marginLeft _dc .Length )*QueryBuilder {_cbf ._cb .PageParameters .MarginLeft =marginLeft ;return _cbf ;};
+// WithPort sets the Port option for the client options.
+func WithPort (option int )Option {return func (_gbg *Options ){_gbg .Port =option }};
 
-// Client is a structure that is a HTTP client for the unihtml server.
-type Client struct{Options Options ;Client *_e .Client ;};
+// WaitTime sets the minimum load time parameter for the page rendering.
+func (_gg *QueryBuilder )WaitTime (d _ad .Duration )*QueryBuilder {_gg ._dbc .RenderParameters .WaitTime =d ;return _gg ;};var (ErrNotFound =_d .New ("\u006eo\u0074\u0020\u0066\u006f\u0075\u006ed");ErrBadRequest =_d .New ("b\u0061\u0064\u0020\u0072\u0065\u0071\u0075\u0065\u0073\u0074");
+ErrNotImplemented =_d .New ("\u006eo\u0074 \u0069\u006d\u0070\u006c\u0065\u006d\u0065\u006e\u0074\u0065\u0064");ErrInternalError =_d .New ("i\u006e\u0074\u0065\u0072na\u006c \u0073\u0065\u0072\u0076\u0065r\u0020\u0065\u0072\u0072\u006f\u0072");ErrBadGateway =_d .New ("b\u0061\u0064\u0020\u0067\u0061\u0074\u0065\u0077\u0061\u0079");
+ErrUnauthorized =_d .New ("\u0075\u006e\u0061u\u0074\u0068\u006f\u0072\u0069\u007a\u0065\u0064");ErrTimedOut =_d .New ("\u0072\u0065\u0071\u0075\u0065\u0073\u0074\u0020\u0074\u0069\u006d\u0065d\u0020\u006f\u0075\u0074"););
 
-// QueryBuilder is the query that converts HTMLConverter defined data
-type QueryBuilder struct{_cb Query ;_gdg error ;};
-
-// Validate checks if provided Query is valid.
-func (_fed *Query )Validate ()error {switch _fed .Method {case "\u0077\u0065\u0062":if _fed .URL ==""{return ErrMissingData ;};case "\u0064\u0069\u0072","\u0068\u0074\u006d\u006c":if len (_fed .Content )==0{return ErrMissingData ;};if _fed .ContentType ==""{return ErrContentType ;
-};default:return _eg .Errorf ("\u0075\u006e\u0064ef\u0069\u006e\u0065\u0064\u0020\u0063\u006f\u006e\u0074e\u006et\u0020q\u0075e\u0072\u0079\u0020\u006d\u0065\u0074\u0068\u006f\u0072\u003a\u0020\u0025\u0073",_fed .Method );};if _be :=_fed .PageParameters .Validate ();
-_be !=nil {return _be ;};if _gg :=_fed .RenderParameters .Validate ();_gg !=nil {return _gg ;};return nil ;};
-
-// MarginTop sets up the MarginTop parameter for the query.
-func (_ccg *QueryBuilder )MarginTop (marginTop _dc .Length )*QueryBuilder {_ccg ._cb .PageParameters .MarginTop =marginTop ;return _ccg ;};
-
-// WithDefaultTimeout sets the DefaultTimeout option for the client options.
-func WithDefaultTimeout (option _af .Duration )Option {return func (_dca *Options ){_dca .DefaultTimeout =option };};
-
-// PaperHeight sets up the PaperHeight (in cm) parameter for the query.
-func (_bc *QueryBuilder )PaperHeight (paperHeight _dc .Length )*QueryBuilder {_bc ._cb .PageParameters .PaperHeight =paperHeight ;return _bc ;};
+// DefaultPageParameters creates default parameters.
+func DefaultPageParameters ()PageParameters {return PageParameters {Orientation :_gf .Portrait }};
 
 // Portrait sets up the portrait page orientation.
-func (_cff *QueryBuilder )Portrait ()*QueryBuilder {_cff ._cb .PageParameters .Orientation =_dc .Portrait ;return _cff ;};
+func (_ccae *QueryBuilder )Portrait ()*QueryBuilder {_ccae ._dbc .PageParameters .Orientation =_gf .Portrait ;return _ccae ;};
 
-// New creates new client with provided options.
-func New (o Options )*Client {o .DefaultTimeout =_af .Second *30;if o .Port <=0{o .Port =8080;};if o .Hostname ==""{o .Hostname ="\u00312\u0037\u002e\u0030\u002e\u0030\u002e1";};var _cde =&_e .Transport {DialContext :(&_fcf .Dialer {Timeout :5*_af .Second }).DialContext ,TLSHandshakeTimeout :5*_af .Second };
-_fe .Log .Info ("\u0043l\u0069e\u006e\u0074\u0020\u0041\u0064\u0064\u0072\u003a\u0020\u0025\u0073",o .Addr ());return &Client {Options :o ,Client :&_e .Client {Transport :_cde ,Timeout :o .DefaultTimeout }};};
+// Options are the client options used by the HTTP client.
+type Options struct{HTTPS bool ;Hostname string ;Port int ;DefaultTimeout _ad .Duration ;Prefix string ;};
 
-// PaperWidth sets up the PaperWidth (in cm) parameter for the query.
-func (_cbee *QueryBuilder )PaperWidth (paperWidth _dc .Length )*QueryBuilder {_cbee ._cb .PageParameters .PaperWidth =paperWidth ;return _cbee ;};
+// Err gets the error which could occur in the query.
+func (_ga *QueryBuilder )Err ()error {return _ga ._dc };func (_fbbf *Client )setQueryValues (_eeb *_ea .Request ,_fga *Query ){_bgg :=_eeb .URL .Query ();_gb :=_fga .PageParameters ;if _gb .PageSize !=nil {_bgg .Set ("\u0070a\u0067\u0065\u002d\u0073\u0069\u007ae",_gb .PageSize .String ());
+};if _gb .PaperHeight !=nil {_bgg .Set ("\u0070\u0061\u0070e\u0072\u002d\u0068\u0065\u0069\u0067\u0068\u0074",_gb .PaperHeight .String ());};if _gb .PaperWidth !=nil {_bgg .Set ("p\u0061\u0070\u0065\u0072\u002d\u0077\u0069\u0064\u0074\u0068",_gb .PaperWidth .String ());
+};if _gb .MarginTop !=nil {_bgg .Set ("\u006d\u0061\u0072\u0067\u0069\u006e\u002d\u0074\u006f\u0070",_gb .MarginTop .String ());};if _gb .MarginBottom !=nil {_bgg .Set ("\u006d\u0061\u0072\u0067\u0069\u006e\u002d\u0062\u006f\u0074\u0074\u006f\u006d",_gb .MarginBottom .String ());
+};if _gb .MarginRight !=nil {_bgg .Set ("\u006d\u0061\u0072g\u0069\u006e\u002d\u0072\u0069\u0067\u0068\u0074",_gb .MarginRight .String ());};if _gb .MarginLeft !=nil {_bgg .Set ("m\u0061\u0072\u0067\u0069\u006e\u002d\u006c\u0065\u0066\u0074",_gb .MarginLeft .String ());
+};if _gb .Orientation ==_gf .Landscape {_bgg .Set ("o\u0072\u0069\u0065\u006e\u0074\u0061\u0074\u0069\u006f\u006e",_gb .Orientation .String ());};if _fga .RenderParameters .WaitTime !=0{_bgg .Set ("\u006d\u0069\u006e\u0069\u006d\u0075\u006d\u002d\u006c\u006f\u0061\u0064-\u0074\u0069\u006d\u0065",_ge .FormatInt (int64 (_fga .RenderParameters .WaitTime /_ad .Millisecond ),10));
+};_eeb .URL .RawQuery =_bgg .Encode ();};
 
-// Addr gets the HTTP address URI used by the http.Client.
-func (_dfd *Options )Addr ()string {_eab :=_c .Builder {};_eab .WriteString ("\u0068\u0074\u0074\u0070");if _dfd .HTTPS {_eab .WriteRune ('s');};_eab .WriteString ("\u003a\u002f\u002f");_eab .WriteString (_dfd .Hostname );_eab .WriteRune (':');_eab .WriteString (_bg .Itoa (_dfd .Port ));
-if _dfd .Prefix !=""{_eab .WriteString (_dfd .Prefix );};return _eab .String ();};
+// Orientation sets the page orientation for the Query.
+func (_geff *QueryBuilder )Orientation (orientation _gf .Orientation )*QueryBuilder {_geff ._dbc .PageParameters .Orientation =orientation ;return _geff ;};var (ErrMissingData =_d .New ("\u006di\u0073s\u0069\u006e\u0067\u0020\u0069n\u0070\u0075t\u0020\u0064\u0061\u0074\u0061");
+ErrContentType =_d .New ("i\u006ev\u0061\u006c\u0069\u0064\u0020\u0063\u006f\u006et\u0065\u006e\u0074\u0020ty\u0070\u0065");ErrContentTypeDeclared =_d .New ("\u0063\u006f\u006e\u0074\u0065\u006e\u0074\u0020\u0074\u0079\u0070\u0065\u0020\u0069\u0073 \u0061l\u0072\u0065\u0061\u0064\u0079\u0020\u0064\u0065\u0063\u006c\u0061\u0072\u0065\u0064");
+);
 
-// Option is a function that changes client options.
-type Option func (_faf *Options );func (_ed *Client )getGenerateRequest (_bf _d .Context ,_ec *Query )(*_e .Request ,error ){_fg :=generatePDFRequestV1 {Method :_ec .Method ,PageParameters :_ec .PageParameters ,RenderParameters :_ec .RenderParameters };
-switch _ec .Method {case "\u0077\u0065\u0062":_fg .ContentURL =_ec .URL ;case "\u0064\u0069\u0072","\u0068\u0074\u006d\u006c":_fg .ContentType =_ec .ContentType ;_fg .Content =_ec .Content ;};_dff :=new (_bb .Buffer );if _eda :=_a .NewEncoder (_dff ).Encode (&_fg );
-_eda !=nil {return nil ,_ea .Errorf ("e\u006e\u0063\u006f\u0064\u0069\u006eg\u0020\u0072\u0065\u0071\u0075\u0065\u0073\u0074\u0020f\u0061\u0069\u006ce\u0064:\u0020\u0025\u0076",_eda );};_fa :=_ed .Options .Addr ();_fa =_eg .Sprintf ("%\u0073\u002f\u0062\u0065\u0074\u0061\u002f\u0070\u0064\u0066",_fa );
-_fea ,_cdca :=_e .NewRequest ("\u0050\u004f\u0053\u0054",_fa ,_dff );if _cdca !=nil {return nil ,_cdca ;};_fea .Header .Set ("\u0043\u006f\u006et\u0065\u006e\u0074\u002d\u0054\u0079\u0070\u0065","\u0061\u0070p\u006c\u0069\u0063a\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e");
-_fea .Header .Set ("\u0041c\u0063e\u0070\u0074\u002d\u0045\u006e\u0063\u006f\u0064\u0069\u006e\u0067","\u0064\u0065\u0066\u006ca\u0074\u0065\u002c\u0020\u0067\u007a\u0069\u0070\u003b\u0071=\u0031.\u0030\u002c\u0020\u002a\u003b\u0071\u003d0\u002e\u0035");
-_fea =_fea .WithContext (_bf );return _fea ,nil ;};
+// Validate checks the validity of the RenderParameters.
+func (_cge *RenderParameters )Validate ()error {if _cge .WaitTime > _ad .Minute *3{return _d .New ("\u0074\u006f\u006f\u0020\u006c\u006f\u006e\u0067 \u006d\u0069\u006eim\u0075\u006d\u0020\u006c\u006f\u0061d\u0020\u0074\u0069\u006d\u0065\u002e\u0020\u004d\u0061\u0078\u0069\u006d\u0075\u006d\u0020i\u0073\u0020\u0033\u0020\u006d\u0069\u006e\u0075t\u0065\u0073");
+};for _ ,_bc :=range _cge .WaitReady {if _cgeb :=_bc .Validate ();_cgeb !=nil {return _gcg .Errorf ("\u006f\u006e\u0065\u0020\u006f\u0066\u0020w\u0061\u0069\u0074 \u0072\u0065\u0061\u0064y\u0020\u0073\u0065\u006c\u0065\u0063\u0074\u006f\u0072\u0020\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0076\u0061\u006c\u0069\u0064\u003a\u0020\u0025\u0077",_cgeb );
+};};return nil ;};
+
+// Validate checks if provided Query is valid.
+func (_caf *Query )Validate ()error {switch _caf .Method {case "\u0077\u0065\u0062":if _caf .URL ==""{return ErrMissingData ;};case "\u0064\u0069\u0072","\u0068\u0074\u006d\u006c":if len (_caf .Content )==0{return ErrMissingData ;};if _caf .ContentType ==""{return ErrContentType ;
+};default:return _gcg .Errorf ("\u0075\u006e\u0064ef\u0069\u006e\u0065\u0064\u0020\u0063\u006f\u006e\u0074e\u006et\u0020q\u0075e\u0072\u0079\u0020\u006d\u0065\u0074\u0068\u006f\u0072\u003a\u0020\u0025\u0073",_caf .Method );};if _cca :=_caf .PageParameters .Validate ();
+_cca !=nil {return _cca ;};if _ebe :=_caf .RenderParameters .Validate ();_ebe !=nil {return _ebe ;};return nil ;};
 
 // ConvertHTML converts provided Query input into PDF file data.
 // Implements creator.HTMLConverter interface.
-func (_gc *Client )ConvertHTML (ctx _d .Context ,q *Query )(*PDFResponse ,error ){if _bbe :=q .Validate ();_bbe !=nil {return nil ,_bbe ;};_gf ,_bbc :=_gc .getGenerateRequest (ctx ,q );if _bbc !=nil {return nil ,_bbc ;};_fe .Log .Trace ("\u0052\u0065\u0071\u0075\u0065\u0073\u0074 \u002d\u0020\u0025s\u0020\u002d\u0020\u0025s\u0025\u0073\u002c\u0020\u0048\u0065\u0061\u0064\u0065\u0072\u0073\u003a\u0020\u0025\u0076\u002c\u0020\u0051\u0075\u0065\u0072\u0079\u003a\u0020\u0025\u0076",_gf .Method ,_gf .URL .Hostname (),_gf .URL .Path ,_gf .Header ,_gf .URL .Query ());
-_fd ,_bbc :=_gc .Client .Do (_gf );if _bbc !=nil {return nil ,_bbc ;};var _gfe error ;switch _fd .StatusCode {case _e .StatusNotFound :_gfe =ErrNotFound ;case _e .StatusBadRequest :_gfe =ErrBadRequest ;case _e .StatusNotImplemented :_gfe =ErrNotImplemented ;
-case _e .StatusUnauthorized :_gfe =ErrUnauthorized ;case _e .StatusRequestTimeout :_gfe =ErrTimedOut ;case _e .StatusCreated :default:_gfe =ErrInternalError ;};_fbg :=_fd .Body ;switch _fd .Header .Get ("\u0043\u006fn\u0074\u0065\u006et\u002d\u0045\u006e\u0063\u006f\u0064\u0069\u006e\u0067"){case "\u0067\u007a\u0069\u0070":_fbg ,_bbc =_db .NewReader (_fd .Body );
-if _bbc !=nil {return nil ,_bbc ;};case "\u0064e\u0066\u006c\u0061\u0074\u0065":_fbg =_fb .NewReader (_fd .Body );case "":default:return nil ,_eg .Errorf ("\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0043o\u006e\u0074\u0065\u006e\u0074\u002dE\u006e\u0063\u006f\u0064\u0069\u006e\u0067\u003a\u0020\u0025\u0073\u0020\u0068e\u0061\u0064\u0065\u0072",_fd .Header .Get ("\u0043\u006fn\u0074\u0065\u006et\u002d\u0045\u006e\u0063\u006f\u0064\u0069\u006e\u0067"));
-};_eae ,_bbc :=_f .ReadAll (_fbg );if _bbc !=nil &&_gfe ==nil {return nil ,_eg .Errorf ("\u0055\u006e\u0069HT\u004d\u004c\u0020\u0073\u0065\u0072\u0076\u0065\u0072\u0020\u0065\u0072\u0072\u006f\u0072\u0020\u0025\u0073",_bbc );};_fe .Log .Trace ("\u005b\u0025\u0064]\u0020\u0025\u0073\u0020\u0025\u0073\u0025\u0073",_fd .StatusCode ,_gf .Method ,_gf .URL .Host ,_gf .URL .Path );
-if _gfe !=nil {return nil ,_eg .Errorf ("\u0025\u0073\u0020%\u0077",string (_eae ),_gfe );};_ff :=_fd .Header .Get ("\u0058\u002d\u004a\u006f\u0062\u002d\u0049\u0044");_fe .Log .Trace ("\u0052\u0065\u0073\u0070\u006f\u006e\u0073\u0065\u0020I\u0044\u0020\u0025\u0073",_ff );
-return &PDFResponse {ID :_ff ,Data :_eae },nil ;};
+func (_ca *Client )ConvertHTML (ctx _e .Context ,q *Query )(*PDFResponse ,error ){if _gfb :=q .Validate ();_gfb !=nil {return nil ,_gfb ;};_bb ,_ef :=_ca .getGenerateRequest (ctx ,q );if _ef !=nil {return nil ,_ef ;};_bg .Log .Trace ("\u0052\u0065\u0071\u0075\u0065\u0073\u0074 \u002d\u0020\u0025s\u0020\u002d\u0020\u0025s\u0025\u0073\u002c\u0020\u0048\u0065\u0061\u0064\u0065\u0072\u0073\u003a\u0020\u0025\u0076\u002c\u0020\u0051\u0075\u0065\u0072\u0079\u003a\u0020\u0025\u0076",_bb .Method ,_bb .URL .Hostname (),_bb .URL .Path ,_bb .Header ,_bb .URL .Query ());
+_af ,_ef :=_ca .Client .Do (_bb );if _ef !=nil {return nil ,_ef ;};var _ec error ;switch _af .StatusCode {case _ea .StatusNotFound :_ec =ErrNotFound ;case _ea .StatusBadRequest :_ec =ErrBadRequest ;case _ea .StatusNotImplemented :_ec =ErrNotImplemented ;
+case _ea .StatusUnauthorized :_ec =ErrUnauthorized ;case _ea .StatusRequestTimeout :_ec =ErrTimedOut ;case _ea .StatusCreated :default:_ec =ErrInternalError ;};_bga :=_af .Body ;switch _af .Header .Get ("\u0043\u006fn\u0074\u0065\u006et\u002d\u0045\u006e\u0063\u006f\u0064\u0069\u006e\u0067"){case "\u0067\u007a\u0069\u0070":_bga ,_ef =_cc .NewReader (_af .Body );
+if _ef !=nil {return nil ,_ef ;};case "\u0064e\u0066\u006c\u0061\u0074\u0065":_bga =_b .NewReader (_af .Body );case "":default:return nil ,_gcg .Errorf ("\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0043o\u006e\u0074\u0065\u006e\u0074\u002dE\u006e\u0063\u006f\u0064\u0069\u006e\u0067\u003a\u0020\u0025\u0073\u0020\u0068e\u0061\u0064\u0065\u0072",_af .Header .Get ("\u0043\u006fn\u0074\u0065\u006et\u002d\u0045\u006e\u0063\u006f\u0064\u0069\u006e\u0067"));
+};_ba ,_ef :=_c .ReadAll (_bga );if _ef !=nil &&_ec ==nil {return nil ,_gcg .Errorf ("\u0055\u006e\u0069HT\u004d\u004c\u0020\u0073\u0065\u0072\u0076\u0065\u0072\u0020\u0065\u0072\u0072\u006f\u0072\u0020\u0025\u0073",_ef );};_bg .Log .Trace ("\u005b\u0025\u0064]\u0020\u0025\u0073\u0020\u0025\u0073\u0025\u0073",_af .StatusCode ,_bb .Method ,_bb .URL .Host ,_bb .URL .Path );
+if _ec !=nil {return nil ,_gcg .Errorf ("\u0025\u0073\u0020%\u0077",string (_ba ),_ec );};_cg :=_af .Header .Get ("\u0058\u002d\u004a\u006f\u0062\u002d\u0049\u0044");_bg .Log .Trace ("\u0052\u0065\u0073\u0070\u006f\u006e\u0073\u0065\u0020I\u0044\u0020\u0025\u0073",_cg );
+return &PDFResponse {ID :_cg ,Data :_ba },nil ;};
 
-// Landscape sets up the landscape portrait orientation.
-func (_ef *QueryBuilder )Landscape ()*QueryBuilder {_ef ._cb .PageParameters .Orientation =_dc .Landscape ;return _ef ;};
+// QueryBuilder is the query that converts HTMLConverter defined data
+type QueryBuilder struct{_dbc Query ;_dc error ;};
 
 // WithPrefix sets the client prefix.
-func WithPrefix (prefix string )Option {return func (_ecf *Options ){_ecf .Prefix =prefix }};
+func WithPrefix (prefix string )Option {return func (_aag *Options ){_aag .Prefix =prefix }};
 
 // WithHTTPS sets the TLS option for the client options.
-func WithHTTPS (useHTTPS bool )Option {return func (_ffe *Options ){_ffe .HTTPS =useHTTPS }};
-
-// MarginRight sets up the MarginRight parameter for the query.
-func (_cee *QueryBuilder )MarginRight (marginRight _dc .Length )*QueryBuilder {_cee ._cb .PageParameters .MarginRight =marginRight ;return _cee ;};
-
-// WaitVisible waits for the selector to get visible.
-func (_edf *QueryBuilder )WaitVisible (selector string ,by _bd .ByType )*QueryBuilder {_edf ._cb .RenderParameters .WaitVisible =append (_edf ._cb .RenderParameters .WaitVisible ,BySelector {Selector :selector ,By :by });return _edf ;};
-
-// Options are the client options used by the HTTP client.
-type Options struct{HTTPS bool ;Hostname string ;Port int ;DefaultTimeout _af .Duration ;Prefix string ;};
-
-// WithHostname sets the Hostname option for the client options.
-func WithHostname (option string )Option {return func (_dce *Options ){_dce .Hostname =option }};
-
-// PageSize sets up the PageSize parameter for the query.
-func (_fba *QueryBuilder )PageSize (pageSize _dc .PageSize )*QueryBuilder {if pageSize !=_dc .Undefined {_fba ._cb .PageParameters .PageSize =&pageSize ;};return _fba ;};
-
-// PDFResponse is the response used by the HTMLConverter.
-type PDFResponse struct{ID string `json:"id"`;Data []byte `json:"data"`;};
-
-// Validate checks if the parameters are valid.
-func (_eca *PageParameters )Validate ()error {if _eca .PaperWidth !=nil {if _eca .PaperWidth .Millimeters ()< 0{return _b .New ("\u006e\u0065g\u0061\u0074\u0069\u0076\u0065\u0020\u0076\u0061\u006c\u0075\u0065\u0020\u0066\u006f\u0072\u0020\u0050\u0061\u0070\u0065\u0072\u0057id\u0074\u0068");
-};};if _eca .PaperHeight !=nil {if _eca .PaperHeight .Millimeters ()< 0{return _b .New ("\u006e\u0065\u0067\u0061\u0074\u0069\u0076\u0065\u0020\u0076a\u006c\u0075\u0065\u0020\u0066\u006f\u0072 \u0050\u0061\u0070\u0065\u0072\u0048\u0065\u0069\u0067\u0068\u0074");
-};};if _eca .MarginTop !=nil {if _eca .MarginTop .Millimeters ()< 0{return _b .New ("\u006e\u0065\u0067\u0061t\u0069\u0076\u0065\u0020\u0076\u0061\u006c\u0075\u0065\u0020f\u006fr\u0020\u004d\u0061\u0072\u0067\u0069\u006eT\u006f\u0070");};};if _eca .MarginBottom !=nil {if _eca .MarginBottom .Millimeters ()< 0{return _b .New ("\u006e\u0065\u0067a\u0074\u0069\u0076\u0065 \u0076\u0061\u006c\u0075\u0065\u0020\u0066o\u0072\u0020\u004d\u0061\u0072\u0067\u0069\u006e\u0042\u006f\u0074\u0074\u006f\u006d");
-};};if _eca .MarginLeft !=nil {if _eca .MarginLeft .Millimeters ()< 0{return _b .New ("\u006e\u0065g\u0061\u0074\u0069\u0076\u0065\u0020\u0076\u0061\u006c\u0075\u0065\u0020\u0066\u006f\u0072\u0020\u004d\u0061\u0072\u0067\u0069\u006eLe\u0066\u0074");};};
-if _eca .MarginRight !=nil {if _eca .MarginRight .Millimeters ()< 0{return _b .New ("\u006e\u0065\u0067\u0061\u0074\u0069\u0076\u0065\u0020\u0076a\u006c\u0075\u0065\u0020\u0066\u006f\u0072 \u004d\u0061\u0072\u0067\u0069\u006e\u0052\u0069\u0067\u0068\u0074");
-};};if _eca .PageSize !=nil &&!_eca .PageSize .IsAPageSize (){return _b .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0070\u0061\u0067\u0065 \u0073\u0069\u007a\u0065");};return nil ;};
+func WithHTTPS (useHTTPS bool )Option {return func (_gcf *Options ){_gcf .HTTPS =useHTTPS }};
 
 // PageParameters are the query parameters used in the PDF generation.
 type PageParameters struct{
 
 // PaperWidth sets the width of the paper.
-PaperWidth _dc .Length `schema:"paper-width" json:"paperWidth"`;
+PaperWidth _gf .Length `schema:"paper-width" json:"paperWidth"`;
 
 // PaperHeight is the height of the output paper.
-PaperHeight _dc .Length `schema:"paper-height" json:"paperHeight"`;
+PaperHeight _gf .Length `schema:"paper-height" json:"paperHeight"`;
 
 // PageSize is the page size string.
-PageSize *_dc .PageSize `schema:"page-size" json:"pageSize"`;
+PageSize *_gf .PageSize `schema:"page-size" json:"pageSize"`;
 
 // Orientation defines if the output should be in a landscape format.
-Orientation _dc .Orientation `schema:"orientation" json:"orientation"`;
+Orientation _gf .Orientation `schema:"orientation" json:"orientation"`;
 
 // MarginTop sets up the Top Margin for the output.
-MarginTop _dc .Length `schema:"margin-top" json:"marginTop"`;
+MarginTop _gf .Length `schema:"margin-top" json:"marginTop"`;
 
 // MarginBottom sets up the Bottom Margin for the output.
-MarginBottom _dc .Length `schema:"margin-bottom" json:"marginBottom"`;
+MarginBottom _gf .Length `schema:"margin-bottom" json:"marginBottom"`;
 
 // MarginLeft sets up the Left Margin for the output.
-MarginLeft _dc .Length `schema:"margin-left" json:"marginLeft"`;
+MarginLeft _gf .Length `schema:"margin-left" json:"marginLeft"`;
 
 // MarginRight sets up the Right Margin for the output.
-MarginRight _dc .Length `schema:"margin-right" json:"marginRight"`;};
-
-// Validate checks if the QueryBuilder had no errors during composition and creation.
-func (_cdcg *QueryBuilder )Validate ()error {if _cdcg ._gdg !=nil {return _cdcg ._gdg ;};return _cdcg ._cb .Validate ();};
-
-// Err gets the error which could occur in the query.
-func (_cbe *QueryBuilder )Err ()error {return _cbe ._gdg };
-
-// HealthCheck connects to the server and check the health status of the server.
-func (_df *Client )HealthCheck (ctx _d .Context )error {_cdc :=_df .Options .Addr ();_cdc =_eg .Sprintf ("\u0025s\u002f\u0068\u0065\u0061\u006c\u0074h",_cdc );_ege ,_bga :=_e .NewRequest ("\u0047\u0045\u0054",_cdc ,nil );if _bga !=nil {return _bga ;};_ege =_ege .WithContext (ctx );
-_ga ,_bga :=_df .Client .Do (_ege );if _bga !=nil {return _bga ;};switch _ga .StatusCode {case _e .StatusOK :return nil ;case _e .StatusNotFound :return ErrNotFound ;case _e .StatusInternalServerError :return ErrInternalError ;case _e .StatusBadGateway :return ErrBadGateway ;
-default:return ErrNotImplemented ;};};
-
-// WaitTime sets the minimum load time parameter for the page rendering.
-func (_afe *QueryBuilder )WaitTime (d _af .Duration )*QueryBuilder {_afe ._cb .RenderParameters .WaitTime =d ;return _afe ;};
-
-// DefaultPageParameters creates default parameters.
-func DefaultPageParameters ()PageParameters {return PageParameters {Orientation :_dc .Portrait }};
+MarginRight _gf .Length `schema:"margin-right" json:"marginRight"`;};func (_de *Client )getGenerateRequest (_aga _e .Context ,_ce *Query )(*_ea .Request ,error ){_fbb :=generatePDFRequestV1 {Method :_ce .Method ,PageParameters :_ce .PageParameters ,RenderParameters :_ce .RenderParameters };
+switch _ce .Method {case "\u0077\u0065\u0062":_fbb .ContentURL =_ce .URL ;case "\u0064\u0069\u0072","\u0068\u0074\u006d\u006c":_fbb .ContentType =_ce .ContentType ;_fbb .Content =_ce .Content ;};_eef :=new (_db .Buffer );if _eg :=_ee .NewEncoder (_eef ).Encode (&_fbb );
+_eg !=nil {return nil ,_gcg .Errorf ("e\u006e\u0063\u006f\u0064\u0069\u006eg\u0020\u0072\u0065\u0071\u0075\u0065\u0073\u0074\u0020f\u0061\u0069\u006ce\u0064:\u0020\u0025\u0076",_eg );};_aa :=_de .Options .Addr ();_aa =_gcg .Sprintf ("%\u0073\u002f\u0062\u0065\u0074\u0061\u002f\u0070\u0064\u0066",_aa );
+_fg ,_efg :=_ea .NewRequest ("\u0050\u004f\u0053\u0054",_aa ,_eef );if _efg !=nil {return nil ,_efg ;};_fg .Header .Set ("\u0043\u006f\u006et\u0065\u006e\u0074\u002d\u0054\u0079\u0070\u0065","\u0061\u0070p\u006c\u0069\u0063a\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e");
+_fg .Header .Set ("\u0041c\u0063e\u0070\u0074\u002d\u0045\u006e\u0063\u006f\u0064\u0069\u006e\u0067","\u0064\u0065\u0066\u006ca\u0074\u0065\u002c\u0020\u0067\u007a\u0069\u0070\u003b\u0071=\u0031.\u0030\u002c\u0020\u002a\u003b\u0071\u003d0\u002e\u0035");
+_fg =_fg .WithContext (_aga );return _fg ,nil ;};
 
 // SetContent sets custom data with it's content type.
-func (_feaa *QueryBuilder )SetContent (content _dg .Content )*QueryBuilder {if _feaa ._gdg !=nil {return _feaa ;};switch content .Method (){case "\u0064\u0069\u0072","\u0068\u0074\u006d\u006c":if _feaa ._cb .ContentType !=""{_feaa ._gdg =ErrContentTypeDeclared ;
-return _feaa ;};if content .ContentType ()==""{_feaa ._gdg =_ea .Errorf ("\u0065\u006d\u0070\u0074y\u0020\u0063\u0075\u0073\u0074\u006f\u006d\u0020\u0063\u006fn\u0074e\u006e\u0074\u0020\u0074\u0079\u0070\u0065 \u0025\u0077",ErrContentType );return _feaa ;
-};_feaa ._cb .Content =content .Data ();_feaa ._cb .ContentType =content .ContentType ();case "\u0077\u0065\u0062":if _feaa ._cb .ContentType !=""{_feaa ._gdg =ErrContentTypeDeclared ;return _feaa ;};_feaa ._cb .URL =string (content .Data ());_feaa ._cb .ContentType =content .ContentType ();
-default:_feaa ._gdg =_ea .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u006f\u006et\u0065\u006e\u0074\u0020\u006d\u0065\u0074\u0068\u006f\u0064:\u0020\u0025\u0073",content .Method ());return _feaa ;};_feaa ._cb .Method =content .Method ();
-return _feaa ;};
+func (_abg *QueryBuilder )SetContent (content _adf .Content )*QueryBuilder {if _abg ._dc !=nil {return _abg ;};switch content .Method (){case "\u0064\u0069\u0072","\u0068\u0074\u006d\u006c":if _abg ._dbc .ContentType !=""{_abg ._dc =ErrContentTypeDeclared ;
+return _abg ;};if content .ContentType ()==""{_abg ._dc =_gcg .Errorf ("\u0065\u006d\u0070\u0074y\u0020\u0063\u0075\u0073\u0074\u006f\u006d\u0020\u0063\u006fn\u0074e\u006e\u0074\u0020\u0074\u0079\u0070\u0065 \u0025\u0077",ErrContentType );return _abg ;
+};_abg ._dbc .Content =content .Data ();_abg ._dbc .ContentType =content .ContentType ();case "\u0077\u0065\u0062":if _abg ._dbc .ContentType !=""{_abg ._dc =ErrContentTypeDeclared ;return _abg ;};_abg ._dbc .URL =string (content .Data ());_abg ._dbc .ContentType =content .ContentType ();
+default:_abg ._dc =_gcg .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u006f\u006et\u0065\u006e\u0074\u0020\u006d\u0065\u0074\u0068\u006f\u0064:\u0020\u0025\u0073",content .Method ());return _abg ;};_abg ._dbc .Method =content .Method ();
+return _abg ;};
 
 // BuildHTMLQuery creates a Query builder that is supposed to create valid
-func BuildHTMLQuery ()*QueryBuilder {return &QueryBuilder {}};
+func BuildHTMLQuery ()*QueryBuilder {return &QueryBuilder {}};type generatePDFRequestV1 struct{Content []byte `json:"content"`;ContentType string `json:"contentType"`;ContentURL string `json:"contentURL"`;Method string `json:"method"`;ExpiresAt int64 `json:"expiresAt"`;
+PageParameters ;RenderParameters ;};
 
-// Orientation sets the page orientation for the Query.
-func (_gge *QueryBuilder )Orientation (orientation _dc .Orientation )*QueryBuilder {_gge ._cb .PageParameters .Orientation =orientation ;return _gge ;};
+// MarginTop sets up the MarginTop parameter for the query.
+func (_dfb *QueryBuilder )MarginTop (marginTop _gf .Length )*QueryBuilder {_dfb ._dbc .PageParameters .MarginTop =marginTop ;return _dfb ;};
+
+// Option is a function that changes client options.
+type Option func (_ae *Options );
+
+// WaitReady waits for the selector to get ready - 'loaded'.
+func (_bac *QueryBuilder )WaitReady (selector string ,by _eb .ByType )*QueryBuilder {_bac ._dbc .RenderParameters .WaitReady =append (_bac ._dbc .RenderParameters .WaitReady ,BySelector {Selector :selector ,By :by });return _bac ;};
+
+// Validate checks if the QueryBuilder had no errors during composition and creation.
+func (_gef *QueryBuilder )Validate ()error {if _gef ._dc !=nil {return _gef ._dc ;};return _gef ._dbc .Validate ();};
 
 // MarginBottom sets up the MarginBottom parameter for the query.
-func (_fbc *QueryBuilder )MarginBottom (marginBottom _dc .Length )*QueryBuilder {_fbc ._cb .PageParameters .MarginBottom =marginBottom ;return _fbc ;};
+func (_ceb *QueryBuilder )MarginBottom (marginBottom _gf .Length )*QueryBuilder {_ceb ._dbc .PageParameters .MarginBottom =marginBottom ;return _ceb ;};
 
-// WithPort sets the Port option for the client options.
-func WithPort (option int )Option {return func (_dga *Options ){_dga .Port =option }};
+// PDFResponse is the response used by the HTMLConverter.
+type PDFResponse struct{ID string `json:"id"`;Data []byte `json:"data"`;};
+
+// PaperHeight sets up the PaperHeight (in cm) parameter for the query.
+func (_bdd *QueryBuilder )PaperHeight (paperHeight _gf .Length )*QueryBuilder {_bdd ._dbc .PageParameters .PaperHeight =paperHeight ;return _bdd ;};
+
+// Landscape sets up the landscape portrait orientation.
+func (_cgd *QueryBuilder )Landscape ()*QueryBuilder {_cgd ._dbc .PageParameters .Orientation =_gf .Landscape ;return _cgd ;};
+
+// Query is a structure that contains query parameters and the content used for the HTMLConverter conversion process.
+type Query struct{Content []byte ;ContentType string ;URL string ;Method string ;PageParameters PageParameters ;RenderParameters RenderParameters ;};
+
+// HealthCheck connects to the server and check the health status of the server.
+func (_ada *Client )HealthCheck (ctx _e .Context )error {_da :=_ada .Options .Addr ();_da =_gcg .Sprintf ("\u0025s\u002f\u0068\u0065\u0061\u006c\u0074h",_da );_ab ,_be :=_ea .NewRequest ("\u0047\u0045\u0054",_da ,nil );if _be !=nil {return _be ;};_ab =_ab .WithContext (ctx );
+_bd ,_be :=_ada .Client .Do (_ab );if _be !=nil {return _be ;};switch _bd .StatusCode {case _ea .StatusOK :return nil ;case _ea .StatusNotFound :return ErrNotFound ;case _ea .StatusInternalServerError :return ErrInternalError ;case _ea .StatusBadGateway :return ErrBadGateway ;
+default:return ErrNotImplemented ;};};
+
+// MarginLeft sets up the MarginLeft parameter for the query.
+func (_gcd *QueryBuilder )MarginLeft (marginLeft _gf .Length )*QueryBuilder {_gcd ._dbc .PageParameters .MarginLeft =marginLeft ;return _gcd ;};
+
+// Client is a structure that is a HTTP client for the unihtml server.
+type Client struct{Options Options ;Client *_ea .Client ;};
+
+// Validate checks if the parameters are valid.
+func (_fgg *PageParameters )Validate ()error {if _fgg .PaperWidth !=nil {if _fgg .PaperWidth .Millimeters ()< 0{return _d .New ("\u006e\u0065g\u0061\u0074\u0069\u0076\u0065\u0020\u0076\u0061\u006c\u0075\u0065\u0020\u0066\u006f\u0072\u0020\u0050\u0061\u0070\u0065\u0072\u0057id\u0074\u0068");
+};};if _fgg .PaperHeight !=nil {if _fgg .PaperHeight .Millimeters ()< 0{return _d .New ("\u006e\u0065\u0067\u0061\u0074\u0069\u0076\u0065\u0020\u0076a\u006c\u0075\u0065\u0020\u0066\u006f\u0072 \u0050\u0061\u0070\u0065\u0072\u0048\u0065\u0069\u0067\u0068\u0074");
+};};if _fgg .MarginTop !=nil {if _fgg .MarginTop .Millimeters ()< 0{return _d .New ("\u006e\u0065\u0067\u0061t\u0069\u0076\u0065\u0020\u0076\u0061\u006c\u0075\u0065\u0020f\u006fr\u0020\u004d\u0061\u0072\u0067\u0069\u006eT\u006f\u0070");};};if _fgg .MarginBottom !=nil {if _fgg .MarginBottom .Millimeters ()< 0{return _d .New ("\u006e\u0065\u0067a\u0074\u0069\u0076\u0065 \u0076\u0061\u006c\u0075\u0065\u0020\u0066o\u0072\u0020\u004d\u0061\u0072\u0067\u0069\u006e\u0042\u006f\u0074\u0074\u006f\u006d");
+};};if _fgg .MarginLeft !=nil {if _fgg .MarginLeft .Millimeters ()< 0{return _d .New ("\u006e\u0065g\u0061\u0074\u0069\u0076\u0065\u0020\u0076\u0061\u006c\u0075\u0065\u0020\u0066\u006f\u0072\u0020\u004d\u0061\u0072\u0067\u0069\u006eLe\u0066\u0074");};};
+if _fgg .MarginRight !=nil {if _fgg .MarginRight .Millimeters ()< 0{return _d .New ("\u006e\u0065\u0067\u0061\u0074\u0069\u0076\u0065\u0020\u0076a\u006c\u0075\u0065\u0020\u0066\u006f\u0072 \u004d\u0061\u0072\u0067\u0069\u006e\u0052\u0069\u0067\u0068\u0074");
+};};if _fgg .PageSize !=nil &&!_fgg .PageSize .IsAPageSize (){return _d .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0070\u0061\u0067\u0065 \u0073\u0069\u007a\u0065");};return nil ;};
+
+// PageSize sets up the PageSize parameter for the query.
+func (_bde *QueryBuilder )PageSize (pageSize _gf .PageSize )*QueryBuilder {if pageSize !=_gf .Undefined {_bde ._dbc .PageParameters .PageSize =&pageSize ;};return _bde ;};
+
+// WaitVisible waits for the selector to get visible.
+func (_gab *QueryBuilder )WaitVisible (selector string ,by _eb .ByType )*QueryBuilder {_gab ._dbc .RenderParameters .WaitVisible =append (_gab ._dbc .RenderParameters .WaitVisible ,BySelector {Selector :selector ,By :by });return _gab ;};
+
+// WithDefaultTimeout sets the DefaultTimeout option for the client options.
+func WithDefaultTimeout (option _ad .Duration )Option {return func (_ade *Options ){_ade .DefaultTimeout =option };};
+
+// Addr gets the HTTP address URI used by the http.Client.
+func (_fc *Options )Addr ()string {_fa :=_g .Builder {};_fa .WriteString ("\u0068\u0074\u0074\u0070");if _fc .HTTPS {_fa .WriteRune ('s');};_fa .WriteString ("\u003a\u002f\u002f");_fa .WriteString (_fc .Hostname );_fa .WriteRune (':');_fa .WriteString (_ge .Itoa (_fc .Port ));
+if _fc .Prefix !=""{_fa .WriteString (_fc .Prefix );};return _fa .String ();};
+
+// RenderParameters are the parameters related with the rendering.
+type RenderParameters struct{WaitTime _ad .Duration `schema:"minimum-load-time" json:"waitTime"`;WaitReady []BySelector `json:"waitReady"`;WaitVisible []BySelector `json:"waitVisible"`;};
+
+// MarginRight sets up the MarginRight parameter for the query.
+func (_ed *QueryBuilder )MarginRight (marginRight _gf .Length )*QueryBuilder {_ed ._dbc .PageParameters .MarginRight =marginRight ;return _ed ;};
+
+// WithHostname sets the Hostname option for the client options.
+func WithHostname (option string )Option {return func (_daf *Options ){_daf .Hostname =option }};
+
+// PaperWidth sets up the PaperWidth (in cm) parameter for the query.
+func (_gfg *QueryBuilder )PaperWidth (paperWidth _gf .Length )*QueryBuilder {_gfg ._dbc .PageParameters .PaperWidth =paperWidth ;return _gfg ;};
+
+// Validate checks validity of the selector.
+func (_fbe BySelector )Validate ()error {if _fbe .Selector ==""{return _d .New ("\u0070\u0072\u006fvi\u0064\u0065\u0064\u0020\u0065\u006d\u0070\u0074\u0079\u0020\u0073\u0065\u006c\u0065\u0063\u0074\u006f\u0072");};if _ece :=_fbe .By .Validate ();_ece !=nil {return _ece ;
+};return nil ;};
+
+// BySelector is a structure that defines a selector with it's query 'by' type.
+type BySelector struct{Selector string `json:"selector"`;By _eb .ByType `json:"by"`;};
 
 // ParseOptions parses options for the Client.
-func ParseOptions (connectPath string )(Options ,error ){if !_c .HasPrefix (connectPath ,"\u0068\u0074\u0074\u0070"){connectPath ="\u0068t\u0074\u0070\u003a\u002f\u002f"+connectPath ;};_cc ,_cd :=_fc .Parse (connectPath );if _cd !=nil {return Options {},_ea .Errorf ("p\u0072\u006f\u0076\u0069\u0064\u0065d\u0020\u0069\u006e\u0076\u0061\u006ci\u0064\u0020\u0075\u006e\u0069\u0068\u0074m\u006c\u002d\u0073\u0065\u0072\u0076\u0065\u0072\u0020\u0075r\u006c");
-};var _ad int ;if _cc .Port ()!=""{_ad ,_cd =_bg .Atoi (_cc .Port ());if _cd !=nil {return Options {},_ea .Errorf ("\u0070\u0061\u0072si\u006e\u0067\u0020\u0070\u006f\u0072\u0074\u0020\u0066\u0061\u0069\u006c\u0065\u0064\u003a\u0020\u0025\u0077",_cd );
-};};return Options {Hostname :_cc .Hostname (),Port :_ad ,HTTPS :_cc .Scheme =="\u0068\u0074\u0074p\u0073",Prefix :_cc .Path },nil ;};
-
-// Validate checks the validity of the RenderParameters.
-func (_cdb *RenderParameters )Validate ()error {if _cdb .WaitTime > _af .Minute *3{return _b .New ("\u0074\u006f\u006f\u0020\u006c\u006f\u006e\u0067 \u006d\u0069\u006eim\u0075\u006d\u0020\u006c\u006f\u0061d\u0020\u0074\u0069\u006d\u0065\u002e\u0020\u004d\u0061\u0078\u0069\u006d\u0075\u006d\u0020i\u0073\u0020\u0033\u0020\u006d\u0069\u006e\u0075t\u0065\u0073");
-};for _ ,_dd :=range _cdb .WaitReady {if _gd :=_dd .Validate ();_gd !=nil {return _eg .Errorf ("\u006f\u006e\u0065\u0020\u006f\u0066\u0020w\u0061\u0069\u0074 \u0072\u0065\u0061\u0064y\u0020\u0073\u0065\u006c\u0065\u0063\u0074\u006f\u0072\u0020\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0076\u0061\u006c\u0069\u0064\u003a\u0020\u0025\u0077",_gd );
-};};return nil ;};var (ErrMissingData =_b .New ("\u006di\u0073s\u0069\u006e\u0067\u0020\u0069n\u0070\u0075t\u0020\u0064\u0061\u0074\u0061");ErrContentType =_b .New ("i\u006ev\u0061\u006c\u0069\u0064\u0020\u0063\u006f\u006et\u0065\u006e\u0074\u0020ty\u0070\u0065");
-ErrContentTypeDeclared =_b .New ("\u0063\u006f\u006e\u0074\u0065\u006e\u0074\u0020\u0074\u0079\u0070\u0065\u0020\u0069\u0073 \u0061l\u0072\u0065\u0061\u0064\u0079\u0020\u0064\u0065\u0063\u006c\u0061\u0072\u0065\u0064"););
+func ParseOptions (connectPath string )(Options ,error ){if !_g .HasPrefix (connectPath ,"\u0068\u0074\u0074\u0070"){connectPath ="\u0068t\u0074\u0070\u003a\u002f\u002f"+connectPath ;};_ag ,_df :=_gc .Parse (connectPath );if _df !=nil {return Options {},_gcg .Errorf ("p\u0072\u006f\u0076\u0069\u0064\u0065d\u0020\u0069\u006e\u0076\u0061\u006ci\u0064\u0020\u0075\u006e\u0069\u0068\u0074m\u006c\u002d\u0073\u0065\u0072\u0076\u0065\u0072\u0020\u0075r\u006c");
+};var _f int ;if _ag .Port ()!=""{_f ,_df =_ge .Atoi (_ag .Port ());if _df !=nil {return Options {},_gcg .Errorf ("\u0070\u0061\u0072si\u006e\u0067\u0020\u0070\u006f\u0072\u0074\u0020\u0066\u0061\u0069\u006c\u0065\u0064\u003a\u0020\u0025\u0077",_df );};
+};return Options {Hostname :_ag .Hostname (),Port :_f ,HTTPS :_ag .Scheme =="\u0068\u0074\u0074p\u0073",Prefix :_ag .Path },nil ;};
