@@ -9,4 +9,4 @@
 // Use of this source code is governed by the UniDoc End User License Agreement
 // terms that can be accessed at https://unidoc.io/eula/
 
-package main ;import _a "github.com/unidoc/unihtml/cli/cmd";func main (){_a .Execute ()};
+package main ;import _f "github.com/unidoc/unihtml/cli/cmd";func main (){_f .Execute ()};
