@@ -42,7 +42,7 @@ This plugin works in a pair with the UniHTML server. It is distributed using Doc
    ```
 3. Define environment variable: `UNIPDF_LICENSE_PATH` with the path to the UniDoc license.
 4. Define environment variable: `UNIPDF_CUSTOMER_NAME` with your customer name matching your license.
-5. Get the latest version of the `github.com/unidoc/unipdf/v3` module: `go get github.com/unidoc/unipdf/v3`
+5. Get the latest version of the `github.com/unidoc/unipdf/v4` module: `go get github.com/unidoc/unipdf/v4`
 
 ## UniHTML Server Licenses
 
@@ -73,7 +73,7 @@ import (
 	"os"
 
 	"github.com/unidoc/unihtml"
-	"github.com/unidoc/unipdf/v3/creator"
+	"github.com/unidoc/unipdf/v4/creator"
 )
 
 func main() {
