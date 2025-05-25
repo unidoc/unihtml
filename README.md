@@ -61,6 +61,10 @@ This license kind requires also an environment variable `UNIHTML_CUSTOMER_NAME` 
 UniHTML Server accepts also a UniDoc metered license. This could be set by providing you **API Key** in the environment variable:
 - `UNIDOC_METERED_API_KEY` - the value of this variable should be an **API Key** matched to your license.
 
+### Ignore Certificate Errors
+If you are needed to access a self-signed certificate URL for the UniHTML, you can set the environment variable `UNIHTML_IGNORE_CERT_ERRORS` to `true` to ignore certificate errors.  
+*However, we did not recommend this for production use, or when you are sure it is safe to set this to `true`*.
+
 ## Usage
 
 Following example connects to the UniHTML server, reads the content of the input file and converts it using `github.com/unidoc/unipdf/v3/creator` package.
