@@ -12,191 +12,190 @@
 // Package sizes defines basic types that determines the size units i.e. lengths.
 //
 //
-package sizes ;import (_f "encoding/json";_c "flag";_e "fmt";_d "strconv";_af "strings";);
-
-// String implements fmt.Stringer interface.
-func (_aed Millimeter )String ()string {_ba :=_af .Builder {};_ba .WriteString (_d .FormatFloat (float64 (_aed ),'f',1,64));_ba .WriteString ("\u006d\u006d");return _ba .String ();};
-
-// Set implements flag.Value interface.
-func (_afe *Point )Set (s string )error {_ec ,_cb :=_d .ParseFloat (s ,64);if _cb !=nil {return _e .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0076\u0061\u006c\u0075\u0065\u003a\u0020%\u0077",_cb );};*_afe =Point (_ec );
-return nil ;};
+package sizes ;import (_a "encoding/json";_d "flag";_f "fmt";_gb "strconv";_g "strings";);
 
 // Type implements pflag.Value interface.
-func (_cf Inch )Type ()string {return "\u0069\u006e\u0063\u0068"};var _bdc =[]PageSize {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+func (_gc *LengthFlag )Type ()string {return "\u0075\u006e\u0069\u0074"};
+
+// Inches gets the inch value. Implements Length interface.
+func (_ec Inch )Inches ()Inch {return _ec };
+
+// Points implements Length interface.
+func (_cg Inch )Points ()Point {return Point (float64 (_cg )*_da )};
+
+// Set sets the unit value.
+// Implements pflag.Value interface.
+func (_ff *LengthFlag )Set (s string )error {if s =="\u0075n\u0064\u0065\u0066\u0069\u006e\u0065d"{_ff .Length =nil ;return nil ;};_gf ,_dfd :=UnmarshalLength (s );if _dfd !=nil {return _dfd ;};_ff .Length =_gf ;return nil ;};var (_ Length =Millimeter (0);
+);
+
+// LengthFlag is a pflag wrapper for the Length value.
+type LengthFlag struct{Length Length ;};
+
+// Set implements pflag.Value interface.
+func (_fd *Inch )Set (s string )error {_caf ,_gfb :=_gb .ParseFloat (s ,64);if _gfb !=nil {return _f .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0076\u0061\u006c\u0075\u0065\u003a\u0020%\u0077",_gfb );};*_fd =Inch (_caf );
+return nil ;};
+
+// Set implements flag.Value interface.
+func (_gg *Point )Set (s string )error {_cfe ,_cd :=_gb .ParseFloat (s ,64);if _cd !=nil {return _f .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0076\u0061\u006c\u0075\u0065\u003a\u0020%\u0077",_cd );};*_gg =Point (_cfe );
+return nil ;};
+
+// MarshalUnit marshals the unit into the string.
+func MarshalUnit (unit Length )(string ,error ){switch _ed :=unit .(type ){case Millimeter :return _f .Sprintf ("\u0025\u002e\u0030\u0066\u006d\u006d",_ed ),nil ;case Inch :return _f .Sprintf ("\u0025\u002e\u0030\u0066\u0069\u006e",_ed ),nil ;case Point :return _f .Sprintf ("\u0025\u002e\u0030\u0066\u0070\u0074",_ed ),nil ;
+default:return "",_f .Errorf ("i\u006e\u0076\u0061\u006cid\u0020u\u006e\u0069\u0074\u0020\u0074y\u0070\u0065\u003a\u0020\u0025\u0054",unit );};};
+
+// String implements fmt.Stringer interface.
+func (_ga Orientation )String ()string {if _ga ==Portrait {return "\u0070\u006f\u0072\u0074\u0072\u0061\u0069\u0074";};return "\u006ca\u006e\u0064\u0073\u0063\u0061\u0070e";};
+
+// String gets the string value for given flag.
+func (_bc *LengthFlag )String ()string {if _bc .Length ==nil {return "\u0075n\u0064\u0065\u0066\u0069\u006e\u0065d";};return _bc .Length .String ();};
+
+// Millimeters gets the float64 millimeter value.
+func (_bab Millimeter )Millimeters ()Millimeter {return _bab };
+
+// Millimeter is the dimension unit that defines a millimeter.
+type Millimeter float64 ;var _aea =[]PageSize {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+
+// UnmarshalJSON implements the json.Unmarshaler interface for PageSize
+func (_fc *PageSize )UnmarshalJSON (data []byte )error {var _dgc string ;if _ddd :=_a .Unmarshal (data ,&_dgc );_ddd !=nil {return _f .Errorf ("P\u0061\u0067\u0065\u0053\u0069\u007ae\u0020\u0073\u0068\u006f\u0075\u006cd\u0020\u0062\u0065\u0020\u0061\u0020\u0073t\u0072\u0069\u006e\u0067\u002c\u0020\u0067\u006f\u0074\u0020%\u0073",data );
+};var _ffd error ;*_fc ,_ffd =PageSizeString (_dgc );return _ffd ;};
+
+// Points implements Length interface.
+func (_aa Point )Points ()Point {return _aa };
+
+// Type implements pflag.Value interface.
+func (_cfg Inch )Type ()string {return "\u0069\u006e\u0063\u0068"};var _bfg =[...]uint8 {0,9,11,13,15,17,19,21,23,25,27,29,32,34,36,38,40,42,44,46,48,50,52,55,61};
 
 // Inch is a unit that
 type Inch float64 ;
 
-// LengthFlag is a pflag wrapper for the Length value.
-type LengthFlag struct{Length Length ;};var _cdc =map[string ]PageSize {_bgc [0:9]:0,_bgc [9:11]:1,_bgc [11:13]:2,_bgc [13:15]:3,_bgc [15:17]:4,_bgc [17:19]:5,_bgc [19:21]:6,_bgc [21:23]:7,_bgc [23:25]:8,_bgc [25:27]:9,_bgc [27:29]:10,_bgc [29:32]:11,_bgc [32:34]:12,_bgc [34:36]:13,_bgc [36:38]:14,_bgc [38:40]:15,_bgc [40:42]:16,_bgc [42:44]:17,_bgc [44:46]:18,_bgc [46:48]:19,_bgc [48:50]:20,_bgc [50:52]:21,_bgc [52:55]:22,_bgc [55:61]:23};
-
-
-// Millimeters gets the float64 millimeter value.
-func (_gg Millimeter )Millimeters ()Millimeter {return _gg };
-
-// Name implements pflag.Value interface.
-func (_gfa Inch )Name ()string {return "\u0069\u006e\u0063\u0068"};
-
-// Type implements pflag.Value interface.
-func (_gfd Orientation )Type ()string {return "o\u0072\u0069\u0065\u006e\u0074\u0061\u0074\u0069\u006f\u006e";};
-
-// Name implements viper.FlagValue interface.
-func (_cd Point )Name ()string {return "\u0070\u006f\u0069n\u0074"};
-
-// ValueString implements pflag.Value interface.
-func (_gfg Inch )ValueString ()string {return _gfg .String ()};
-
-// Point is a unit of Length commonly used to measure the height of fonts.
-type Point float64 ;const (_fe =float64 (1)/float64 (25.4);_da =25.4;_cc =0.0139;_fd =0.3528;_b =1.0/64;_ad =1.0/_fd ;);
-
-// Millimeters converts the inches value to the millimeters.
-func (_bg Point )Millimeters ()Millimeter {return Millimeter (float64 (_bg )*_fd )};var _ _c .Value =(*Point )(nil );func _dca (_fbc string )(Point ,error ){_fbc =_af .TrimSpace (_af .Trim (_fbc ,"\u0070\u0074"));_bf ,_ade :=_d .ParseFloat (_fbc ,64);if _ade !=nil {return 0,_ade ;
-};return Point (_bf ),nil ;};var _cee =[...]uint8 {0,9,11,13,15,17,19,21,23,25,27,29,32,34,36,38,40,42,44,46,48,50,52,55,61};
-
-// Points implements Length interface.
-func (_dcc Inch )Points ()Point {return Point (float64 (_dcc )*_b )};
-
-// HasChanged implements viper.FlagValue interface.
-func (_gfb *Point )HasChanged ()bool {return _gfb !=nil };
-
-// String implements fmt.Stringer interface.
-func (_aaf Orientation )String ()string {if _aaf ==Portrait {return "\u0070\u006f\u0072\u0074\u0072\u0061\u0069\u0074";};return "\u006ca\u006e\u0064\u0073\u0063\u0061\u0070e";};
-
-// Set implements pflag.Value interface.
-func (_dc *Inch )Set (s string )error {_bd ,_cg :=_d .ParseFloat (s ,64);if _cg !=nil {return _e .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0076\u0061\u006c\u0075\u0065\u003a\u0020%\u0077",_cg );};*_dc =Inch (_bd );
-return nil ;};
-
-// Set implements pflag.Value interface.
-func (_edc *PageSize )Set (s string )error {_adf ,_dgf :=UnmarshalPageSize (s );if _dgf !=nil {return _dgf ;};*_edc =_adf ;return nil ;};func _cac (_ed string )(Inch ,error ){_ed =_af .TrimSpace (_af .Trim (_ed ,"\u0069\u006e"));_ecg ,_add :=_d .ParseFloat (_ed ,64);
-if _add !=nil {return 0,_e .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0076\u0061\u006c\u0075\u0065\u003a\u0020%\u0077",_add );};return Inch (_ecg ),nil ;};const (Portrait =Orientation (false );Landscape =Orientation (true );
-);
-
-// ValueType implements viper.FlagValue interface.
-func (_efc Point )ValueType ()string {return _efc .Type ()};
-
-// Set sets the unit value.
-// Implements pflag.Value interface.
-func (_ddb *LengthFlag )Set (s string )error {if s =="\u0075n\u0064\u0065\u0066\u0069\u006e\u0065d"{_ddb .Length =nil ;return nil ;};_ae ,_g :=UnmarshalLength (s );if _g !=nil {return _g ;};_ddb .Length =_ae ;return nil ;};
-
-// UnmarshalLength unmarshalls string value into Length.
-func UnmarshalLength (length string )(Length ,error ){if _af .HasSuffix (length ,"\u006d\u006d"){return _bgb (length );};if _af .HasSuffix (length ,"\u0069\u006e"){return _cac (length );};if _af .HasSuffix (length ,"\u0070\u0074"){return _dca (length );
-};return nil ,_e .Errorf ("\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u006c\u0065\u006e\u0067\u0074h\u0020\u0069\u006e\u0070\u0075\u0074\u003a\u0020\u0025\u0073",length );};
-
-// Points implements Length interface.
-func (_df Point )Points ()Point {return _df };
-
-// Type implements pflag.Value interface.
-func (_efd PageSize )Type ()string {return "\u0070a\u0067\u0065\u002d\u0073\u0069\u007ae"};
-
-// Length is it the default dimension unit.
-type Length interface{Millimeters ()Millimeter ;Inches ()Inch ;Points ()Point ;String ()string ;};
-
-// Millimeter is the dimension unit that defines a millimeter.
-type Millimeter float64 ;
-
-// Inches gets the inch value. Implements Length interface.
-func (_ea Point )Inches ()Inch {return Inch (float64 (_ea )*_cc )};
-
-// MarshalUnit marshals the unit into the string.
-func MarshalUnit (unit Length )(string ,error ){switch _fed :=unit .(type ){case Millimeter :return _e .Sprintf ("\u0025\u002e\u0030\u0066\u006d\u006d",_fed ),nil ;case Inch :return _e .Sprintf ("\u0025\u002e\u0030\u0066\u0069\u006e",_fed ),nil ;case Point :return _e .Sprintf ("\u0025\u002e\u0030\u0066\u0070\u0074",_fed ),nil ;
-default:return "",_e .Errorf ("i\u006e\u0076\u0061\u006cid\u0020u\u006e\u0069\u0074\u0020\u0074y\u0070\u0065\u003a\u0020\u0025\u0054",unit );};};
-
 // MarshalJSON implements json.Marshaler interface
-func (_gf Millimeter )MarshalJSON ()([]byte ,error ){return _bga (_gf )};func _bga (_gfc Length )([]byte ,error ){if _gfc ==nil {return nil ,nil ;};_bb ,_cca :=MarshalUnit (_gfc );if _cca !=nil {return nil ,_cca ;};return []byte ("\u0022"+_bb +"\u0022"),nil ;
-};
+func (_ca Millimeter )MarshalJSON ()([]byte ,error ){return _bba (_ca )};
 
 // Type implements pflag.Value interface.
-func (_ef *LengthFlag )Type ()string {return "\u0075\u006e\u0069\u0074"};
-
-// String implements fmt.Stringer interface.
-func (_ce Inch )String ()string {_db :=_af .Builder {};_db .WriteString (_d .FormatFloat (float64 (_ce ),'f',1,64));_db .WriteString ("\u0069\u006e");return _db .String ();};
-
-// ValueString implements viper.FlagValue interface.
-func (_ag Point )ValueString ()string {return _ag .String ()};
-
-// Dimensions gets the dimensions of the given page size.
-// If provided page size is not valid than the function returns 0 values.
-func (_cgb PageSize )Dimensions ()(_ccg ,_bc Millimeter ){switch _cgb {case A0 :return 841,1189;case A1 :return 594,841;case A2 :return 420,594;case A3 :return 297,420;case A4 :return 210,297;case A5 :return 148,210;case A6 :return 105,148;case A7 :return 74,105;
-case A8 :return 52,74;case A9 :return 37,52;case A10 :return 26,37;case B0 :return 1000,1414;case B1 :return 707,1000;case B2 :return 500,707;case B3 :return 353,500;case B4 :return 250,353;case B5 :return 176,250;case B6 :return 125,176;case B7 :return 88,125;
-case B8 :return 66,88;case B9 :return 44,62;case B10 :return 31,44;case Letter :return 215.9,279.4;};return _ccg ,_bc ;};
-
-// Points implements Length interface.
-func (_gea Millimeter )Points ()Point {return Point (_gea *_ad )};var _ Length =Inch (0);
-
-// IsAPageSize returns "true" if the value is listed in the enum definition. "false" otherwise
-func (_fa PageSize )IsAPageSize ()bool {for _ ,_gd :=range _bdc {if _fa ==_gd {return true ;};};return false ;};
-
-// PageSizeString retrieves an enum value from the enum constants string name.
-// Throws an error if the param is not part of the enum.
-func PageSizeString (s string )(PageSize ,error ){if _ecga ,_bgad :=_cdc [s ];_bgad {return _ecga ,nil ;};return 0,_e .Errorf ("\u0025\u0073 \u0064\u006f\u0065\u0073 \u006e\u006ft\u0020\u0062\u0065\u006c\u006f\u006e\u0067\u0020t\u006f\u0020\u0050\u0061\u0067\u0065\u0053\u0069\u007a\u0065\u0020\u0076a\u006c\u0075\u0065\u0073",s );
-};
-
-// Inches gets the inch value. Implements Length interface.
-func (_fgf Inch )Inches ()Inch {return _fgf };
-
-// PageSize is the enum used for defining the page size.
-type PageSize int ;
-
-// HasChanged implements pflag.Value interface.
-func (_fg *Inch )HasChanged ()bool {return _fg !=nil };const _bgc ="U\u006e\u0064\u0065\u0066\u0069\u006e\u0065\u0064\u0041\u0030\u0041\u0031\u0041\u0032\u0041\u0033\u0041\u0034\u0041\u0035\u0041\u0036\u0041\u0037\u0041\u0038A\u0039A\u0031\u0030\u0042\u0030B\u0031\u00422\u0042\u0033\u0042\u0034\u0042\u0035\u0042\u0036\u0042\u0037\u0042\u0038\u0042\u0039\u0042\u0031\u0030\u004c\u0065\u0074\u0074\u0065\u0072";
-
-
-// PageSizeValues returns all values of the enum
-func PageSizeValues ()[]PageSize {return _bdc };func _bgb (_dgd string )(Millimeter ,error ){_dgd =_af .TrimSpace (_af .TrimSuffix (_dgd ,"\u006d\u006d"));_fc ,_gfbc :=_d .ParseFloat (_dgd ,64);if _gfbc !=nil {return 0,_e .Errorf ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006d\u0069\u006c\u006c\u0069\u006d\u0065t\u0065r\u0020\u0076\u0061\u006c\u0075\u0065\u003a \u0025\u0077",_gfbc );
-};return Millimeter (_fc ),nil ;};
-
-// Type implements pflag.Value interface.
-func (_aec Point )Type ()string {return "\u0070\u006f\u0069n\u0074"};
-
-// Inches gets the inches equivalent from provided millimeter value.
-func (_ge Millimeter )Inches ()Inch {return Inch (float64 (_ge )*_fe )};
-
-// UnmarshalInch unmarshalls provided string into unit.
-func UnmarshalInch (unit string )(Inch ,error ){if _af .HasSuffix (unit ,"\u006d\u006d"){_fb ,_dda :=_bgb (unit );if _dda !=nil {return 0,_dda ;};return _fb .Inches (),nil ;};if _af .HasSuffix (unit ,"\u0069\u006e"){return _cac (unit );};return 0,_e .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0069\u006e\u0070\u0075\u0074\u003a\u0020%\u0073",unit );
-};
-
-// MarshalJSON implements json.Marshaler interface
-func (_eb Inch )MarshalJSON ()([]byte ,error ){return _bga (_eb )};
-
-// MarshalJSON implements json.Marshaler interface.
-func (_fge Point )MarshalJSON ()([]byte ,error ){return _bga (_fge )};
+func (_dd Orientation )Type ()string {return "o\u0072\u0069\u0065\u006e\u0074\u0061\u0074\u0069\u006f\u006e";};
 
 // UnmarshalPageSize unmarshals the page size from the string.
-func UnmarshalPageSize (pageSize string )(PageSize ,error ){var _cea PageSize ;if _dag :=(&_cea ).UnmarshalText ([]byte (pageSize ));_dag !=nil {return 0,_e .Errorf ("\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064\u0020\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u0070a\u0067\u0065\u0020\u0073\u0069\u007a\u0065\u003a\u0020\u0025\u0077",_dag );
-};return _cea ,nil ;};const (Undefined PageSize =iota ;A0 ;A1 ;A2 ;A3 ;A4 ;A5 ;A6 ;A7 ;A8 ;A9 ;A10 ;B0 ;B1 ;B2 ;B3 ;B4 ;B5 ;B6 ;B7 ;B8 ;B9 ;B10 ;Letter ;);func (_ebg PageSize )String ()string {if _ebg < 0||_ebg >=PageSize (len (_cee )-1){return _e .Sprintf ("\u0050\u0061\u0067e\u0053\u0069\u007a\u0065\u0028\u0025\u0064\u0029",_ebg );
-};return _bgc [_cee [_ebg ]:_cee [_ebg +1]];};
+func UnmarshalPageSize (pageSize string )(PageSize ,error ){var _af PageSize ;if _aac :=(&_af ).UnmarshalText ([]byte (pageSize ));_aac !=nil {return 0,_f .Errorf ("\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064\u0020\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u0070a\u0067\u0065\u0020\u0073\u0069\u007a\u0065\u003a\u0020\u0025\u0077",_aac );
+};return _af ,nil ;};
 
 // Millimeters converts the inches value to the millimeters.
-func (_gc Inch )Millimeters ()Millimeter {return Millimeter (float64 (_gc )*_da )};
-
-// MarshalText implements the encoding.TextMarshaler interface for PageSize
-func (_cfd PageSize )MarshalText ()([]byte ,error ){return []byte (_cfd .String ()),nil };
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PageSize
-func (_ede *PageSize )UnmarshalJSON (data []byte )error {var _bbc string ;if _ebe :=_f .Unmarshal (data ,&_bbc );_ebe !=nil {return _e .Errorf ("P\u0061\u0067\u0065\u0053\u0069\u007ae\u0020\u0073\u0068\u006f\u0075\u006cd\u0020\u0062\u0065\u0020\u0061\u0020\u0073t\u0072\u0069\u006e\u0067\u002c\u0020\u0067\u006f\u0074\u0020%\u0073",data );
-};var _eg error ;*_ede ,_eg =PageSizeString (_bbc );return _eg ;};
-
-// Set implements flag.Value interface.
-func (_dccc *Orientation )Set (s string )error {switch s {case "\u0070\u006f\u0072\u0074\u0072\u0061\u0069\u0074":*_dccc =Portrait ;case "\u006ca\u006e\u0064\u0073\u0063\u0061\u0070e":*_dccc =Landscape ;default:return _e .Errorf ("\u0069n\u0076\u0061\u006c\u0069d\u0020\u006f\u0072\u0069\u0065n\u0074a\u0074i\u006f\u006e\u003a\u0020\u0027\u0025\u0073'",s );
-};return nil ;};
+func (_bfc Inch )Millimeters ()Millimeter {return Millimeter (float64 (_bfc )*_ae )};var _ Length =Inch (0);
 
 // MarshalJSON implements the json.Marshaler interface for PageSize
-func (_fbf PageSize )MarshalJSON ()([]byte ,error ){return _f .Marshal (_fbf .String ())};
+func (_gag PageSize )MarshalJSON ()([]byte ,error ){return _a .Marshal (_gag .String ())};
+
+// Set implements flag.Value interface.
+func (_dg *Orientation )Set (s string )error {switch s {case "\u0070\u006f\u0072\u0074\u0072\u0061\u0069\u0074":*_dg =Portrait ;case "\u006ca\u006e\u0064\u0073\u0063\u0061\u0070e":*_dg =Landscape ;default:return _f .Errorf ("\u0069n\u0076\u0061\u006c\u0069d\u0020\u006f\u0072\u0069\u0065n\u0074a\u0074i\u006f\u006e\u003a\u0020\u0027\u0025\u0073'",s );
+};return nil ;};var _ _d .Value =(*Point )(nil );func _bba (_cbf Length )([]byte ,error ){if _cbf ==nil {return nil ,nil ;};_ge ,_gfg :=MarshalUnit (_cbf );if _gfg !=nil {return nil ,_gfg ;};return []byte ("\u0022"+_ge +"\u0022"),nil ;};
+
+// Points implements Length interface.
+func (_cb Millimeter )Points ()Point {return Point (_cb *_ba )};
+
+// ValueString implements viper.FlagValue interface.
+func (_gge Point )ValueString ()string {return _gge .String ()};
+
+// UnmarshalLength unmarshalls string value into Length.
+func UnmarshalLength (length string )(Length ,error ){if _g .HasSuffix (length ,"\u006d\u006d"){return _ce (length );};if _g .HasSuffix (length ,"\u0069\u006e"){return _fbg (length );};if _g .HasSuffix (length ,"\u0070\u0074"){return _agg (length );};return nil ,_f .Errorf ("\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u006c\u0065\u006e\u0067\u0074h\u0020\u0069\u006e\u0070\u0075\u0074\u003a\u0020\u0025\u0073",length );
+};
 
 // Orientation is the page orientation type wrapper.
 type Orientation bool ;
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PageSize
-func (_cfe *PageSize )UnmarshalText (text []byte )error {var _ddf error ;*_cfe ,_ddf =PageSizeString (string (text ));return _ddf ;};var _ _c .Value =(*Orientation )(nil );
+// Set implements pflag.Value interface.
+func (_bcgc *PageSize )Set (s string )error {_dda ,_bdg :=UnmarshalPageSize (s );if _bdg !=nil {return _bdg ;};*_bcgc =_dda ;return nil ;};
 
-// ValueType implements pflag.Value interface.
-func (_ccf Inch )ValueType ()string {return _ccf .Type ()};
+// HasChanged implements viper.FlagValue interface.
+func (_cfd *Point )HasChanged ()bool {return _cfd !=nil };
+
+// Name implements viper.FlagValue interface.
+func (_cc Point )Name ()string {return "\u0070\u006f\u0069n\u0074"};
+
+// UnmarshalInch unmarshalls provided string into unit.
+func UnmarshalInch (unit string )(Inch ,error ){if _g .HasSuffix (unit ,"\u006d\u006d"){_de ,_bga :=_ce (unit );if _bga !=nil {return 0,_bga ;};return _de .Inches (),nil ;};if _g .HasSuffix (unit ,"\u0069\u006e"){return _fbg (unit );};return 0,_f .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0069\u006e\u0070\u0075\u0074\u003a\u0020%\u0073",unit );
+};
+
+// ValueType implements viper.FlagValue interface.
+func (_ecf Point )ValueType ()string {return _ecf .Type ()};
+
+// Name implements pflag.Value interface.
+func (_ab Inch )Name ()string {return "\u0069\u006e\u0063\u0068"};var _bdge =map[string ]PageSize {_gbd [0:9]:0,_gbd [9:11]:1,_gbd [11:13]:2,_gbd [13:15]:3,_gbd [15:17]:4,_gbd [17:19]:5,_gbd [19:21]:6,_gbd [21:23]:7,_gbd [23:25]:8,_gbd [25:27]:9,_gbd [27:29]:10,_gbd [29:32]:11,_gbd [32:34]:12,_gbd [34:36]:13,_gbd [36:38]:14,_gbd [38:40]:15,_gbd [40:42]:16,_gbd [42:44]:17,_gbd [44:46]:18,_gbd [46:48]:19,_gbd [48:50]:20,_gbd [50:52]:21,_gbd [52:55]:22,_gbd [55:61]:23};
+
 
 // String implements fmt.Stringer interface.
-func (_dg Point )String ()string {_fdd :=_af .Builder {};_fdd .WriteString (_d .FormatFloat (float64 (_dg ),'f',1,64));_fdd .WriteString ("\u0070\u0074");return _fdd .String ();};
-
-// String gets the string value for given flag.
-func (_dd *LengthFlag )String ()string {if _dd .Length ==nil {return "\u0075n\u0064\u0065\u0066\u0069\u006e\u0065d";};return _dd .Length .String ();};
+func (_dc Inch )String ()string {_cf :=_g .Builder {};_cf .WriteString (_gb .FormatFloat (float64 (_dc ),'f',1,64));_cf .WriteString ("\u0069\u006e");return _cf .String ();};
 
 // MarshalPageSize marshals the page size into string.
-func MarshalPageSize (p PageSize )(string ,error ){_cgbd ,_addf :=p .MarshalText ();if _addf !=nil {return "",_addf ;};return string (_cgbd ),nil ;};var (_ Length =Millimeter (0););
+func MarshalPageSize (p PageSize )(string ,error ){_ecd ,_dgb :=p .MarshalText ();if _dgb !=nil {return "",_dgb ;};return string (_ecd ),nil ;};
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PageSize
+func (_fde *PageSize )UnmarshalText (text []byte )error {var _fcc error ;*_fde ,_fcc =PageSizeString (string (text ));return _fcc ;};var _ _d .Value =(*Orientation )(nil );
+
+// String implements fmt.Stringer interface.
+func (_eg Point )String ()string {_bfcc :=_g .Builder {};_bfcc .WriteString (_gb .FormatFloat (float64 (_eg ),'f',1,64));_bfcc .WriteString ("\u0070\u0074");return _bfcc .String ();};
+
+// Dimensions gets the dimensions of the given page size.
+// If provided page size is not valid than the function returns 0 values.
+func (_cba PageSize )Dimensions ()(_gee ,_geg Millimeter ){switch _cba {case A0 :return 841,1189;case A1 :return 594,841;case A2 :return 420,594;case A3 :return 297,420;case A4 :return 210,297;case A5 :return 148,210;case A6 :return 105,148;case A7 :return 74,105;
+case A8 :return 52,74;case A9 :return 37,52;case A10 :return 26,37;case B0 :return 1000,1414;case B1 :return 707,1000;case B2 :return 500,707;case B3 :return 353,500;case B4 :return 250,353;case B5 :return 176,250;case B6 :return 125,176;case B7 :return 88,125;
+case B8 :return 66,88;case B9 :return 44,62;case B10 :return 31,44;case Letter :return 215.9,279.4;};return _gee ,_geg ;};
+
+// PageSizeValues returns all values of the enum
+func PageSizeValues ()[]PageSize {return _aea };func _ce (_cac string )(Millimeter ,error ){_cac =_g .TrimSpace (_g .TrimSuffix (_cac ,"\u006d\u006d"));_gca ,_ece :=_gb .ParseFloat (_cac ,64);if _ece !=nil {return 0,_f .Errorf ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006d\u0069\u006c\u006c\u0069\u006d\u0065t\u0065r\u0020\u0076\u0061\u006c\u0075\u0065\u003a \u0025\u0077",_ece );
+};return Millimeter (_gca ),nil ;};const _gbd ="U\u006e\u0064\u0065\u0066\u0069\u006e\u0065\u0064\u0041\u0030\u0041\u0031\u0041\u0032\u0041\u0033\u0041\u0034\u0041\u0035\u0041\u0036\u0041\u0037\u0041\u0038A\u0039A\u0031\u0030\u0042\u0030B\u0031\u00422\u0042\u0033\u0042\u0034\u0042\u0035\u0042\u0036\u0042\u0037\u0042\u0038\u0042\u0039\u0042\u0031\u0030\u004c\u0065\u0074\u0074\u0065\u0072";
+func (_ggg PageSize )String ()string {if _ggg < 0||_ggg >=PageSize (len (_bfg )-1){return _f .Sprintf ("\u0050\u0061\u0067e\u0053\u0069\u007a\u0065\u0028\u0025\u0064\u0029",_ggg );};return _gbd [_bfg [_ggg ]:_bfg [_ggg +1]];};const (_b =float64 (1)/float64 (25.4);
+_ae =25.4;_df =0.0139;_e =0.3528;_da =1.0/64;_ba =1.0/_e ;);func _agg (_dec string )(Point ,error ){_dec =_g .TrimSpace (_g .Trim (_dec ,"\u0070\u0074"));_bcc ,_bcg :=_gb .ParseFloat (_dec ,64);if _bcg !=nil {return 0,_bcg ;};return Point (_bcc ),nil ;
+};
+
+// Type implements pflag.Value interface.
+func (_bcf PageSize )Type ()string {return "\u0070a\u0067\u0065\u002d\u0073\u0069\u007ae"};
+
+// Point is a unit of Length commonly used to measure the height of fonts.
+type Point float64 ;const (Undefined PageSize =iota ;A0 ;A1 ;A2 ;A3 ;A4 ;A5 ;A6 ;A7 ;A8 ;A9 ;A10 ;B0 ;B1 ;B2 ;B3 ;B4 ;B5 ;B6 ;B7 ;B8 ;B9 ;B10 ;Letter ;);
+
+// Millimeters converts the inches value to the millimeters.
+func (_ee Point )Millimeters ()Millimeter {return Millimeter (float64 (_ee )*_e )};
+
+// String implements fmt.Stringer interface.
+func (_fb Millimeter )String ()string {_be :=_g .Builder {};_be .WriteString (_gb .FormatFloat (float64 (_fb ),'f',1,64));_be .WriteString ("\u006d\u006d");return _be .String ();};
+
+// Inches gets the inch value. Implements Length interface.
+func (_ecg Point )Inches ()Inch {return Inch (float64 (_ecg )*_df )};
+
+// Type implements pflag.Value interface.
+func (_bfb Point )Type ()string {return "\u0070\u006f\u0069n\u0074"};
+
+// ValueType implements pflag.Value interface.
+func (_ad Inch )ValueType ()string {return _ad .Type ()};
+
+// Length is it the default dimension unit.
+type Length interface{Millimeters ()Millimeter ;Inches ()Inch ;Points ()Point ;String ()string ;};
+
+// MarshalText implements the encoding.TextMarshaler interface for PageSize
+func (_cgc PageSize )MarshalText ()([]byte ,error ){return []byte (_cgc .String ()),nil };
+
+// HasChanged implements pflag.Value interface.
+func (_db *Inch )HasChanged ()bool {return _db !=nil };
+
+// MarshalJSON implements json.Marshaler interface.
+func (_bbf Point )MarshalJSON ()([]byte ,error ){return _bba (_bbf )};
+
+// PageSizeString retrieves an enum value from the enum constants string name.
+// Throws an error if the param is not part of the enum.
+func PageSizeString (s string )(PageSize ,error ){if _gce ,_dgf :=_bdge [s ];_dgf {return _gce ,nil ;};return 0,_f .Errorf ("\u0025\u0073 \u0064\u006f\u0065\u0073 \u006e\u006ft\u0020\u0062\u0065\u006c\u006f\u006e\u0067\u0020t\u006f\u0020\u0050\u0061\u0067\u0065\u0053\u0069\u007a\u0065\u0020\u0076a\u006c\u0075\u0065\u0073",s );
+};func _fbg (_eda string )(Inch ,error ){_eda =_g .TrimSpace (_g .Trim (_eda ,"\u0069\u006e"));_cgg ,_gcab :=_gb .ParseFloat (_eda ,64);if _gcab !=nil {return 0,_f .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0069\u006e\u0063\u0068\u0020\u0076\u0061\u006c\u0075\u0065\u003a\u0020%\u0077",_gcab );
+};return Inch (_cgg ),nil ;};
+
+// ValueString implements pflag.Value interface.
+func (_bf Inch )ValueString ()string {return _bf .String ()};const (Portrait =Orientation (false );Landscape =Orientation (true ););
+
+// PageSize is the enum used for defining the page size.
+type PageSize int ;
+
+// Inches gets the inches equivalent from provided millimeter value.
+func (_fg Millimeter )Inches ()Inch {return Inch (float64 (_fg )*_b )};
+
+// IsAPageSize returns "true" if the value is listed in the enum definition. "false" otherwise
+func (_fa PageSize )IsAPageSize ()bool {for _ ,_ccd :=range _aea {if _fa ==_ccd {return true ;};};return false ;};
+
+// MarshalJSON implements json.Marshaler interface
+func (_bb Inch )MarshalJSON ()([]byte ,error ){return _bba (_bb )};
