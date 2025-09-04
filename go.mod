@@ -1,13 +1,13 @@
 module github.com/unidoc/unihtml
 
-go 1.18
+go 1.23.0
 
 require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.10.0
-	github.com/unidoc/unipdf/v4 v4.0.0
+	github.com/unidoc/unipdf/v4 v4.3.0
 )
 
 require (
@@ -16,8 +16,8 @@ require (
 	github.com/adrg/xdg v0.5.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/gorilla/i18n v0.0.0-20150820051429-8b358169da46 // indirect
+	github.com/h2non/filetype v1.1.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -31,15 +31,16 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/unidoc/freetype v0.2.3 // indirect
-	github.com/unidoc/pkcs7 v0.2.0 // indirect
+	github.com/unidoc/garabic v0.0.0-20220702200334-8c7cb25baa11 // indirect
+	github.com/unidoc/pkcs7 v0.3.0 // indirect
 	github.com/unidoc/timestamp v0.0.0-20200412005513-91597fd3793a // indirect
-	github.com/unidoc/unichart v0.4.0 // indirect
+	github.com/unidoc/unichart v0.5.1 // indirect
 	github.com/unidoc/unitype v0.5.1 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
-	golang.org/x/image v0.24.0 // indirect
-	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/crypto v0.41.0 // indirect
+	golang.org/x/image v0.30.0 // indirect
+	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/sys v0.35.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
