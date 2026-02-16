@@ -67,7 +67,7 @@ If you are needed to access a self-signed certificate URL for the UniHTML, you c
 
 ## Usage
 
-Following example connects to the UniHTML server, reads the content of the input file and converts it using `github.com/unidoc/unipdf/v3/creator` package.
+Following example connects to the UniHTML server, reads the content of the input file and converts it using `github.com/unidoc/unipdf/v4/creator` package.
 
 ```go
 package main
