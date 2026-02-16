@@ -6,8 +6,8 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.16.0
-	github.com/stretchr/testify v1.10.0
-	github.com/unidoc/unipdf/v4 v4.3.0
+	github.com/stretchr/testify v1.11.1
+	github.com/unidoc/unipdf/v4 v4.7.0
 )
 
 require (
@@ -30,10 +30,12 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
+	github.com/trimmer-io/go-xmp v1.0.0 // indirect
 	github.com/unidoc/freetype v0.2.3 // indirect
 	github.com/unidoc/garabic v0.0.0-20220702200334-8c7cb25baa11 // indirect
 	github.com/unidoc/pkcs7 v0.3.0 // indirect
 	github.com/unidoc/timestamp v0.0.0-20200412005513-91597fd3793a // indirect
+	github.com/unidoc/typesetting v0.1.0 // indirect
 	github.com/unidoc/unichart v0.5.1 // indirect
 	github.com/unidoc/unitype v0.5.1 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
