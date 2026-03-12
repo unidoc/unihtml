@@ -9,11 +9,10 @@
 // Use of this source code is governed by the UniDoc End User License Agreement
 // terms that can be accessed at https://unidoc.io/eula/
 
-package selector ;import _f "errors";
-
-// Validate checks validity of the ByType.
-func (_a ByType )Validate ()error {if _a >=ByID &&_a <=BySearch {return nil ;};return _f .New ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0062\u0079\u0020\u0073\u0065\u006c\u0065\u0063\u0074\u006f\u0072");};const (ByUndefined ByType =iota ;ByID ;ByQueryAll ;
-ByQuery ;ByNodeID ;ByJSPath ;BySearch ;);
+package selector ;import _g "errors";const (ByUndefined ByType =iota ;ByID ;ByQueryAll ;ByQuery ;ByNodeID ;ByJSPath ;BySearch ;);
 
 // ByType is a 'By' selector type enumerator.
 type ByType uint ;
+
+// Validate checks validity of the ByType.
+func (_fc ByType )Validate ()error {if _fc >=ByID &&_fc <=BySearch {return nil ;};return _g .New ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0062\u0079\u0020\u0073\u0065\u006c\u0065\u0063\u0074\u006f\u0072");};
