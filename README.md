@@ -42,7 +42,7 @@ This plugin works in a pair with the UniHTML server. It is distributed using Doc
    ```
 3. Define environment variable: `UNIPDF_LICENSE_PATH` with the path to the UniDoc license.
 4. Define environment variable: `UNIPDF_CUSTOMER_NAME` with your customer name matching your license.
-5. Get the latest version of the `github.com/unidoc/unipdf/v4` module: `go get github.com/unidoc/unipdf/v4`
+5. Get the latest version of the `github.com/unidoc/unipdf/v5` module: `go get github.com/unidoc/unipdf/v5`
 
 ## UniHTML Server Licenses
 
@@ -67,7 +67,7 @@ If you are needed to access a self-signed certificate URL for the UniHTML, you c
 
 ## Usage
 
-Following example connects to the UniHTML server, reads the content of the input file and converts it using `github.com/unidoc/unipdf/v4/creator` package.
+Following example connects to the UniHTML server, reads the content of the input file and converts it using `github.com/unidoc/unipdf/v5/creator` package.
 
 ```go
 package main
@@ -77,7 +77,7 @@ import (
 	"os"
 
 	"github.com/unidoc/unihtml"
-	"github.com/unidoc/unipdf/v4/creator"
+	"github.com/unidoc/unipdf/v5/creator"
 )
 
 func main() {
