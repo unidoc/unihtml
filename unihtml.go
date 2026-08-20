@@ -10,94 +10,112 @@
 // terms that can be accessed at https://unidoc.io/eula/
 
 // Package unihtml contains a plugin for the UniDoc.
-package unihtml ;import (_gc "bytes";_f "context";_bg "errors";_eb "fmt";_ac "github.com/unidoc/unihtml/client";_c "github.com/unidoc/unihtml/content";_gff "github.com/unidoc/unihtml/selector";_gd "github.com/unidoc/unihtml/sizes";_geb "github.com/unidoc/unipdf/v4/common";
-_ea "github.com/unidoc/unipdf/v4/common/license";_ca "github.com/unidoc/unipdf/v4/creator";_gcb "github.com/unidoc/unipdf/v4/model";_cc "github.com/unidoc/unipdf/v4/render";_aa "image";_a "image/color";_gf "math";_e "net/url";_g "os";_ge "time";);
+package unihtml ;import (_cg "bytes";_cf "context";_eb "errors";_a "fmt";_de "github.com/unidoc/unihtml/client";_ce "github.com/unidoc/unihtml/content";_ee "github.com/unidoc/unihtml/selector";_cgf "github.com/unidoc/unihtml/sizes";_dg "github.com/unidoc/unipdf/v5/common";
+_ac "github.com/unidoc/unipdf/v5/common/license";_b "github.com/unidoc/unipdf/v5/creator";_ae "github.com/unidoc/unipdf/v5/model";_ec "github.com/unidoc/unipdf/v5/render";_d "image";_e "image/color";_g "math";_f "net/url";_ca "os";_ea "time";);
 
-// WriteToFile writes the document to a file defined by the output path.
-func (_bbbb *Document )WriteToFile (outputPath string )error {if _ec :=_bbbb .validate ();_ec !=nil {return _ec ;};_dbf :=_ge .Second *20+_bbbb ._dc ;_efc ,_aae :=_f .WithTimeout (_f .Background (),_dbf );defer _aae ();_cd ,_dcd :=_bbbb .extract (_efc ,_bbbb ._bb ,_bbbb ._ggg ,_bbbb .getMargins ());
-if _dcd !=nil {return _dcd ;};_eae :=_ca .New ();for _ ,_geeg :=range _cd {if _dcd =_eae .AddPage (_geeg );_dcd !=nil {return _dcd ;};};return _eae .WriteToFile (outputPath );};
-
-// SetMarginRight sets the left margin.
-func (_ead *Document )SetMarginRight (margin _gd .Length ){_ead ._gee .Right =margin };var _ _ca .Drawable =(*Document )(nil );
-
-// SetPageHeight sets the page height for given document.
-func (_gac *Document )SetPageHeight (pageHeight _gd .Length )error {_gac ._ggg =pageHeight ;_gac ._gg =_ca .PositionAbsolute ;return nil ;};
+// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
+func (_ceac *Document )SetMarkedContentID (id int64 ){};
 
 // NewDocument creates new HTML Document used as an input for the creator.Drawable.
-func NewDocument (path string )(*Document ,error ){_ef :=&Document {};_gbd ,_ce :=_e .Parse (path );if _ce !=nil {return nil ,_ce ;};switch _gbd .Scheme {case "\u0068\u0074\u0074\u0070","\u0068\u0074\u0074p\u0073":_ef ._cf ,_ce =_c .NewWebURL (path );if _ce !=nil {return nil ,_ce ;
-};return _ef ,nil ;};_efb ,_ce :=_g .Stat (path );if _ce !=nil {return nil ,_ce ;};if !_efb .IsDir (){_ef ._cf ,_ce =_c .NewHTMLFile (path );}else {_ef ._cf ,_ce =_c .NewZipDirectory (path );};if _ce !=nil {return nil ,_ce ;};return _ef ,nil ;};
+func NewDocument (path string )(*Document ,error ){_fd :=&Document {};_bc ,_gaf :=_f .Parse (path );if _gaf !=nil {return nil ,_gaf ;};switch _bc .Scheme {case "\u0068\u0074\u0074\u0070","\u0068\u0074\u0074p\u0073":_fd ._fc ,_gaf =_ce .NewWebURL (path );
+if _gaf !=nil {return nil ,_gaf ;};return _fd ,nil ;};_fbc ,_gaf :=_ca .Stat (path );if _gaf !=nil {return nil ,_gaf ;};if !_fbc .IsDir (){_fd ._fc ,_gaf =_ce .NewHTMLFile (path );}else {_fd ._fc ,_gaf =_ce .NewZipDirectory (path );};if _gaf !=nil {return nil ,_gaf ;
+};return _fd ,nil ;};
+
+// SetMarginRight sets the left margin.
+func (_ddd *Document )SetMarginRight (margin _cgf .Length ){_ddd ._fcc .Right =margin };
+
+// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
+func (_cdf *Document )SetStructPageNumber (pageNum *int64 ){};
+
+// ContainerComponent implements creator.containerElement interface.
+func (_bgb *Document )ContainerComponent (container _b .Drawable )(_b .Drawable ,error ){switch container .(type ){case *_b .Chapter :default:return nil ,_a .Errorf ("\u0075\u006e\u0069\u0068t\u006d\u006c\u002e\u0044\u006f\u0063\u0075\u006d\u0065n\u0074\u0020\u0063\u0061\u006e\u0027\u0074\u0020\u0062\u0065\u0020\u0061\u0020\u0063\u006f\u006d\u0070\u006fn\u0065\u006e\u0074\u0020\u006ff\u0020\u0074\u0068\u0065\u0020\u0025\u0054\u0020\u0063\u006f\u006e\u0074\u0061\u0069\u006e\u0065\u0072",container );
+};return _bgb ,nil ;};
+
+// GeneratePageBlocks implements creator.Drawable interface.
+func (_acc *Document )GeneratePageBlocks (ctx _b .DrawContext )([]*_b .Block ,_b .DrawContext ,error ){if _bbb :=_acc .validate ();_bbb !=nil {return nil ,ctx ,_bbb ;};var _deb []*_b .Block ;_caa :=_acc .getMargins ();_gga ,_aadc :=_acc ._dbf ,_acc ._fccc ;
+if _acc ._gd .IsRelative (){_gga ,_aadc =_cgf .Point (ctx .Width ),_cgf .Point (ctx .Height );ctx .X -=float64 (_caa .Left .Points ());}else {ctx .X =_acc ._aca ;ctx .Y =_acc ._cd ;};_bdg ,_cda :=_acc .extract (_cf .Background (),_gga ,_aadc ,_caa );if _cda !=nil {return nil ,_b .DrawContext {},_cda ;
+};for _da ,_cdb :=range _bdg {_eeb ,_cfg :=_b .NewBlockFromPage (_cdb );if _cfg !=nil {return nil ,_b .DrawContext {},_cfg ;};var _ed float64 ;if _acc ._cdc &&_da ==len (_bdg )-1{_eg :=_ec .NewImageDevice ();_ced ,_bg :=_eg .Render (_cdb );if _bg !=nil {return nil ,_b .DrawContext {},_bg ;
+};_acf ,_bg :=_cdb .GetMediaBox ();if _bg !=nil {return nil ,_b .DrawContext {},_bg ;};_eebd :=_ea .Now ();_egd :=_eec (_ced );_ed =_acf .Height ()*_egd ;_dg .Log .Trace ("\u0054\u0072i\u006d\u006d\u0069\u006eg\u0020\u006ca\u0073\u0074\u0020\u0064\u006f\u0063\u0075\u006de\u006e\u0074\u0020\u0070\u0061\u0067\u0065\u0020\u0074\u0061\u006b\u0065n\u003a\u0020\u0025\u0076",_ea .Since (_eebd ));
+if _acc ._fcc .Bottom !=nil {_ed -=float64 (_acc ._fcc .Bottom .Points ());};if _ed < 0{_ed =0;};_dg .Log .Trace ("C\u0072\u006f\u0070\u0070\u0069\u006e\u0067\u0020\u0064\u006f\u0063\u0075\u006d\u0065\u006e\u0074\u0027\u0073\u0020\u0070\u0061\u0067\u0065\u0020\u0025\u002e2\u0066 \u0070\u006f\u0069\u006et\u0073\u0020o\u0066\u0066\u0020\u0062\u006f\u0074\u0074\u006f\u006d\u0020\u006f\u0066\u0020\u006d\u0065\u0064\u0069\u0061\u0020\u0062\u006f\u0078\u000a",_ed );
+};_daf ,_fg ,_cfg :=_eeb .GeneratePageBlocks (ctx );if _cfg !=nil {return nil ,_b .DrawContext {},_cfg ;};ctx =_fg ;ctx .Y -=_ed ;if _da !=len (_bdg )-1&&ctx .Y > (ctx .PageHeight -ctx .Margins .Bottom )*.95{ctx .X =ctx .Margins .Left ;ctx .Y =ctx .Margins .Top ;
+ctx .Page ++;};_deb =append (_deb ,_daf ...);};return _deb ,ctx ,nil ;};
+
+// SetMarginTop sets the left margin.
+func (_ggac *Document )SetMarginTop (margin _cgf .Length ){_ggac ._fcc .Top =margin };var ErrNoClient =_eb .New ("\u0055n\u0069\u0048\u0054\u004d\u004c\u0020\u0063\u006c\u0069\u0065\u006et\u0020\u006e\u006f\u0074\u0020\u0066\u006f\u0075\u006e\u0064");
+
+// SetPos sets the absolute position. Changes object positioning to absolute.
+func (_fce *Document )SetPos (x ,y float64 ){_fce ._gd =_b .PositionAbsolute ;_fce ._aca =x ;_fce ._cd =y ;};func (_cde *Document )getMargins ()margins {_gcd :=_cde ._fcc ;if _cde ._gd .IsRelative (){_gcd .Top =_cgf .Millimeter (1);_gcd .Left =_cgf .Millimeter (1);
+_gcd .Bottom =_cgf .Millimeter (1);_gcd .Right =_cgf .Millimeter (1);return _gcd ;};if _gcd .Top ==nil {_gcd .Top =_cgf .Millimeter (10);};if _gcd .Bottom ==nil {_gcd .Bottom =_cgf .Millimeter (10);};if _gcd .Left ==nil {_gcd .Left =_cgf .Millimeter (10);
+};if _gcd .Right ==nil {_gcd .Right =_cgf .Millimeter (10);};return _gcd ;};
+
+// WriteToFile writes the document to a file defined by the output path.
+func (_acce *Document )WriteToFile (outputPath string )error {if _adg :=_acce .validate ();_adg !=nil {return _adg ;};_efb :=_ea .Second *20+_acce ._fbf ;_fag ,_gef :=_cf .WithTimeout (_cf .Background (),_efb );defer _gef ();_ag ,_acb :=_acce .extract (_fag ,_acce ._dbf ,_acce ._fccc ,_acce .getMargins ());
+if _acb !=nil {return _acb ;};_efc :=_b .New ();for _ ,_gdd :=range _ag {if _acb =_efc .AddPage (_gdd );_acb !=nil {return _acb ;};};return _efc .WriteToFile (outputPath );};func (_dfd *Document )validate ()error {if _aa ==nil {return ErrNoClient ;};if _dfd ._fc ==nil {return ErrContentNotDefined ;
+};return nil ;};var _ _b .Drawable =(*Document )(nil );
+
+// SetPageSize sets the page default size.
+func (_fdb *Document )SetPageSize (pageSize _cgf .PageSize )error {if !pageSize .IsAPageSize (){return _eb .New ("\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064\u0020\u0069\u006ev\u0061\u006c\u0069\u0064\u0020\u0070\u0061\u0067\u0065\u0020s\u0069\u007a\u0065");
+};_fdb ._bb =pageSize ;_fdb ._gd =_b .PositionAbsolute ;return nil ;};
+
+// SetMarginBottom sets the left margin.
+func (_fbce *Document )SetMarginBottom (margin _cgf .Length ){_fbce ._fcc .Bottom =margin };
+
+// GetPdfPages is a function that converts provided input content and
+func (_gde *Document )GetPdfPages (ctx _cf .Context )([]*_ae .PdfPage ,error ){if _gc :=_gde .validate ();_gc !=nil {return nil ,_gc ;};return _gde .extract (ctx ,_gde ._dbf ,_gde ._fccc ,_gde .getMargins ());};
+
+// WaitTime sets the waiting time before the webpage is rendered to PDF.
+func (_ecd *Document )WaitTime (duration _ea .Duration ){_ecd ._fbf =duration };
+
+// SetMargins sets the Document Margins.
+func (_fff *Document )SetMargins (left ,right ,top ,bottom float64 ){_fff ._fcc .Left =_cgf .Point (left );_fff ._fcc .Right =_cgf .Point (right );_fff ._fcc .Top =_cgf .Point (top );_fff ._fcc .Bottom =_cgf .Point (bottom );_fff ._gd =_b .PositionAbsolute ;
+};
+
+// NewDocumentFromString creates a new Document from the provided HTML string.
+func NewDocumentFromString (html string )(*Document ,error ){_dce ,_bf :=_ce .NewStringContent (html );if _bf !=nil {return nil ,_bf ;};_cga :=&Document {};_cga ._fc =_dce ;return _cga ,nil ;};
+
+// Connect creates UniHTML HTTP Client and tries to establish connection with the server.
+func Connect (path string )error {if _ga :=_gab ();_ga !=nil {return _ga ;};_gg ,_db :=_de .ParseOptions (path );if _db !=nil {return _db ;};_aa =_de .New (_gg );_aad ,_ge :=_cf .WithTimeout (_cf .Background (),_ea .Second *5);defer _ge ();if _ebf :=_aa .HealthCheck (_aad );
+_ebf !=nil {return _ebf ;};return nil ;};var ErrContentNotDefined =_eb .New ("\u0068\u0074\u006d\u006c\u0020\u0064o\u0063\u0075\u006d\u0065\u006e\u0074\u0020\u0063\u006f\u006e\u0074\u0065\u006et\u0020\u006e\u006f\u0074\u0020\u0064\u0065f\u0069\u006e\u0065\u0064");
+
+
+// SetPageWidth sets the page width for given document.
+func (_cag *Document )SetPageWidth (pageWidth _cgf .Length )error {_cag ._dbf =pageWidth ;_cag ._gd =_b .PositionAbsolute ;return nil ;};func (_gadb *Document )getTimeoutDuration ()_ea .Duration {if _gadb ._ef !=nil {return *_gadb ._ef ;};return 0;};func _gab ()error {_dgg :=_ac .GetLicenseKey ();
+if _dgg ==nil {return _eb .New ("\u006e\u006f\u0020\u006cic\u0065\u006e\u0073\u0065\u0020\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064");};if !_dgg .IsLicensed (){return _eb .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u006f\u0072 \u006e\u006f\u0020\u006c\u0069\u0063\u0065n\u0073\u0065\u0020\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064");
+};return nil ;};
+
+// TrimLastPageContent trims the last page content so that next creator blocks are located just at the end of given block.
+func (_fa *Document )TrimLastPageContent (){_fa ._cdc =true };type margins struct{Left ,Right ,Bottom ,Top _cgf .Length ;};func _eec (_acbe _d .Image )float64 {_edg :=_acbe .Bounds ();var (_dd int ;_ff _e .Color ;_fca ,_agd ,_bbg uint32 ;);_gae ,_dafg :=_edg .Min .X ,_edg .Max .Y -1;
+_dcea :=_acbe .At (_gae ,_dafg );_cad ,_ace ,_cada ,_ :=_dcea .RGBA ();_egg :=_cad ==_g .MaxUint16 &&_ace ==_g .MaxUint16 &&_cada ==_g .MaxUint16 ;for _dafg =_edg .Max .Y -1;_dafg >=_edg .Min .Y ;_dafg --{var _cc bool ;for _gae =_edg .Min .X ;_gae < _edg .Max .X ;
+_gae ++{_ff =_acbe .At (_gae ,_dafg );_fca ,_agd ,_bbg ,_ =_ff .RGBA ();if (_egg &&(_fca !=_cad ||_agd !=_ace ||_cada !=_bbg ))||(!_egg &&(_g .Abs (float64 (_fca )-float64 (_cad ))/float64 (_g .MaxUint16 )> 0.03||_g .Abs (float64 (_agd )-float64 (_ace ))/float64 (_g .MaxUint16 )> 0.03||_g .Abs (float64 (_bbg )-float64 (_cada ))/float64 (_g .MaxUint16 )> 0.03)){_cc =true ;
+break ;};};if _cc {break ;};_dd =_dafg ;};return float64 (_edg .Max .Y -_dd )/float64 (_edg .Max .Y );};
 
 // WaitReady waits for the provided selector to be ready.
 // A selector might be  i.e.  `#example` for id  and `.example` for classes. The second parameter defines how to match given selector.
-func (_cef *Document )WaitReady (sel string ,by ..._gff .ByType ){_dd :=_gff .BySearch ;if len (by )> 0{_dd =by [0];};_cef ._gcba =append (_cef ._gcba ,_ac .BySelector {Selector :sel ,By :_dd });};func _cca ()error {_gb :=_ea .GetLicenseKey ();if _gb ==nil {return _bg .New ("\u006e\u006f\u0020\u006cic\u0065\u006e\u0073\u0065\u0020\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064");
-};if !_gb .IsLicensed (){return _bg .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u006f\u0072 \u006e\u006f\u0020\u006c\u0069\u0063\u0065n\u0073\u0065\u0020\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064");};return nil ;};
-
-// SetTimeoutDuration sets the timeout duration
-// the default timeout is 15 seconds.
-func (_ebd *Document )SetTimeoutDuration (duration _ge .Duration ){_ebd ._edf =&duration };
-
-// SetMarginTop sets the left margin.
-func (_dg *Document )SetMarginTop (margin _gd .Length ){_dg ._gee .Top =margin };func (_edb *Document )validate ()error {if _bgb ==nil {return ErrNoClient ;};if _edb ._cf ==nil {return ErrContentNotDefined ;};return nil ;};
-
-// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
-func (_bce *Document )SetStructPageNumber (pageNum *int64 ){};
-
-// GeneratePageBlocks implements creator.Drawable interface.
-func (_df *Document )GeneratePageBlocks (ctx _ca .DrawContext )([]*_ca .Block ,_ca .DrawContext ,error ){if _bbb :=_df .validate ();_bbb !=nil {return nil ,ctx ,_bbb ;};var _fa []*_ca .Block ;_ab :=_df .getMargins ();_fg ,_geec :=_df ._bb ,_df ._ggg ;if _df ._gg .IsRelative (){_fg ,_geec =_gd .Point (ctx .Width ),_gd .Point (ctx .Height );
-ctx .X -=float64 (_ab .Left .Points ());}else {ctx .X =_df ._af ;ctx .Y =_df ._gfc ;};_db ,_gaa :=_df .extract (_f .Background (),_fg ,_geec ,_ab );if _gaa !=nil {return nil ,_ca .DrawContext {},_gaa ;};for _fdf ,_dbb :=range _db {_gcg ,_da :=_ca .NewBlockFromPage (_dbb );
-if _da !=nil {return nil ,_ca .DrawContext {},_da ;};var _dbg float64 ;if _df ._cff &&_fdf ==len (_db )-1{_ba :=_cc .NewImageDevice ();_bbf ,_geg :=_ba .Render (_dbb );if _geg !=nil {return nil ,_ca .DrawContext {},_geg ;};_feg ,_geg :=_dbb .GetMediaBox ();
-if _geg !=nil {return nil ,_ca .DrawContext {},_geg ;};_dca :=_ge .Now ();_bbc :=_cdd (_bbf );_dbg =_feg .Height ()*_bbc ;_geb .Log .Trace ("\u0054\u0072i\u006d\u006d\u0069\u006eg\u0020\u006ca\u0073\u0074\u0020\u0064\u006f\u0063\u0075\u006de\u006e\u0074\u0020\u0070\u0061\u0067\u0065\u0020\u0074\u0061\u006b\u0065n\u003a\u0020\u0025\u0076",_ge .Since (_dca ));
-if _df ._gee .Bottom !=nil {_dbg -=float64 (_df ._gee .Bottom .Points ());};if _dbg < 0{_dbg =0;};_geb .Log .Trace ("C\u0072\u006f\u0070\u0070\u0069\u006e\u0067\u0020\u0064\u006f\u0063\u0075\u006d\u0065\u006e\u0074\u0027\u0073\u0020\u0070\u0061\u0067\u0065\u0020\u0025\u002e2\u0066 \u0070\u006f\u0069\u006et\u0073\u0020o\u0066\u0066\u0020\u0062\u006f\u0074\u0074\u006f\u006d\u0020\u006f\u0066\u0020\u006d\u0065\u0064\u0069\u0061\u0020\u0062\u006f\u0078\u000a",_dbg );
-};_dfc ,_be ,_da :=_gcg .GeneratePageBlocks (ctx );if _da !=nil {return nil ,_ca .DrawContext {},_da ;};ctx =_be ;ctx .Y -=_dbg ;if _fdf !=len (_db )-1&&ctx .Y > (ctx .PageHeight -ctx .Margins .Bottom )*.95{ctx .X =ctx .Margins .Left ;ctx .Y =ctx .Margins .Top ;
-ctx .Page ++;};_fa =append (_fa ,_dfc ...);};return _fa ,ctx ,nil ;};
-
-// GetPdfPages is a function that converts provided input content and
-func (_gdg *Document )GetPdfPages (ctx _f .Context )([]*_gcb .PdfPage ,error ){if _ga :=_gdg .validate ();_ga !=nil {return nil ,_ga ;};return _gdg .extract (ctx ,_gdg ._bb ,_gdg ._ggg ,_gdg .getMargins ());};
-
-// SetMarginLeft sets the left margin.
-func (_eca *Document )SetMarginLeft (margin _gd .Length ){_eca ._gee .Left =margin };var ErrContentNotDefined =_bg .New ("\u0068\u0074\u006d\u006c\u0020\u0064o\u0063\u0075\u006d\u0065\u006e\u0074\u0020\u0063\u006f\u006e\u0074\u0065\u006et\u0020\u006e\u006f\u0074\u0020\u0064\u0065f\u0069\u006e\u0065\u0064");
-
-
-// SetPageSize sets the page default size.
-func (_gga *Document )SetPageSize (pageSize _gd .PageSize )error {if !pageSize .IsAPageSize (){return _bg .New ("\u0070\u0072\u006f\u0076\u0069\u0064\u0065\u0064\u0020\u0069\u006ev\u0061\u006c\u0069\u0064\u0020\u0070\u0061\u0067\u0065\u0020s\u0069\u007a\u0065");
-};_gga ._fd =pageSize ;_gga ._gg =_ca .PositionAbsolute ;return nil ;};
-
-// SetPageWidth sets the page width for given document.
-func (_aff *Document )SetPageWidth (pageWidth _gd .Length )error {_aff ._bb =pageWidth ;_aff ._gg =_ca .PositionAbsolute ;return nil ;};
-
-// Connect creates UniHTML HTTP Client and tries to establish connection with the server.
-func Connect (path string )error {if _ebf :=_cca ();_ebf !=nil {return _ebf ;};_fb ,_fc :=_ac .ParseOptions (path );if _fc !=nil {return _fc ;};_bgb =_ac .New (_fb );_gdb ,_fe :=_f .WithTimeout (_f .Background (),_ge .Second *5);defer _fe ();if _d :=_bgb .HealthCheck (_gdb );
-_d !=nil {return _d ;};return nil ;};
-
-// TrimLastPageContent trims the last page content so that next creator blocks are located just at the end of given block.
-func (_fee *Document )TrimLastPageContent (){_fee ._cff =true };
-
-// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
-func (_ccc *Document )SetStructureType (structureType _gcb .StructureType ){};func (_bbe *Document )extract (_gdfe _f .Context ,_efe ,_ebg _gd .Length ,_gbb margins )([]*_gcb .PdfPage ,error ){_cb :=_ac .BuildHTMLQuery ().SetContent (_bbe ._cf ).PageSize (_bbe ._fd ).PaperWidth (_efe ).PaperHeight (_ebg ).Orientation (_bbe ._ed ).MarginLeft (_gbb .Left ).MarginRight (_gbb .Right ).MarginTop (_gbb .Top ).MarginBottom (_gbb .Bottom ).TimeoutDuration (_bbe .getTimeoutDuration ()).WaitTime (_bbe ._dc );
-for _ ,_gdbe :=range _bbe ._gcba {_cb .WaitReady (_gdbe .Selector ,_gdbe .By );};for _ ,_cffdc :=range _bbe ._egb {_cb .WaitVisible (_cffdc .Selector ,_cffdc .By );};_agg ,_cga :=_cb .Query ();if _cga !=nil {return nil ,_cga ;};var _bbef _f .CancelFunc ;
-if _bbe ._edf !=nil {_gdfe ,_bbef =_f .WithTimeout (_gdfe ,*_bbe ._edf );}else {_gdfe ,_bbef =_f .WithTimeout (_gdfe ,_ge .Second *15);};defer _bbef ();_fca ,_cga :=_bgb .ConvertHTML (_gdfe ,_agg );if _cga !=nil {return nil ,_cga ;};_fac :=_gc .NewReader (_fca .Data );
-_eed ,_cga :=_gcb .NewPdfReader (_fac );if _cga !=nil {return nil ,_cga ;};return _eed .PageList ,nil ;};func (_fff *Document )getMargins ()margins {_bcg :=_fff ._gee ;if _fff ._gg .IsRelative (){_bcg .Top =_gd .Millimeter (1);_bcg .Left =_gd .Millimeter (1);
-_bcg .Bottom =_gd .Millimeter (1);_bcg .Right =_gd .Millimeter (1);return _bcg ;};if _bcg .Top ==nil {_bcg .Top =_gd .Millimeter (10);};if _bcg .Bottom ==nil {_bcg .Bottom =_gd .Millimeter (10);};if _bcg .Left ==nil {_bcg .Left =_gd .Millimeter (10);};
-if _bcg .Right ==nil {_bcg .Right =_gd .Millimeter (10);};return _bcg ;};func (_gec *Document )getTimeoutDuration ()_ge .Duration {if _gec ._edf !=nil {return *_gec ._edf ;};return 0;};
-
-// NewDocumentFromString creates a new Document from the provided HTML string.
-func NewDocumentFromString (html string )(*Document ,error ){_fbg ,_gcc :=_c .NewStringContent (html );if _gcc !=nil {return nil ,_gcc ;};_ggd :=&Document {};_ggd ._cf =_fbg ;return _ggd ,nil ;};
-
-// SetLandscapeOrientation sets document landscape page orientation.
-func (_aeg *Document )SetLandscapeOrientation (){_aeg ._ed =_gd .Landscape };
+func (_ccf *Document )WaitReady (sel string ,by ..._ee .ByType ){_fdg :=_ee .BySearch ;if len (by )> 0{_fdg =by [0];};_ccf ._dea =append (_ccf ._dea ,_de .BySelector {Selector :sel ,By :_fdg });};
 
 // GetContent returns the content of the document.
-func (_fdc *Document )GetContent ()_c .Content {return _fdc ._cf };type margins struct{Left ,Right ,Bottom ,Top _gd .Length ;};
+func (_def *Document )GetContent ()_ce .Content {return _def ._fc };
 
-// SetMargins sets the Document Margins.
-func (_gdf *Document )SetMargins (left ,right ,top ,bottom float64 ){_gdf ._gee .Left =_gd .Point (left );_gdf ._gee .Right =_gd .Point (right );_gdf ._gee .Top =_gd .Point (top );_gdf ._gee .Bottom =_gd .Point (bottom );_gdf ._gg =_ca .PositionAbsolute ;
-};func _cdd (_bd _aa .Image )float64 {_eab :=_bd .Bounds ();var (_bc int ;_cg _a .Color ;_geef ,_dac ,_afd uint32 ;);_cffd ,_ee :=_eab .Min .X ,_eab .Max .Y -1;_dfb :=_bd .At (_cffd ,_ee );_cgf ,_dfbc ,_acf ,_ :=_dfb .RGBA ();_bf :=_cgf ==_gf .MaxUint16 &&_dfbc ==_gf .MaxUint16 &&_acf ==_gf .MaxUint16 ;
-for _ee =_eab .Max .Y -1;_ee >=_eab .Min .Y ;_ee --{var _geed bool ;for _cffd =_eab .Min .X ;_cffd < _eab .Max .X ;_cffd ++{_cg =_bd .At (_cffd ,_ee );_geef ,_dac ,_afd ,_ =_cg .RGBA ();if (_bf &&!(_geef ==_cgf &&_dac ==_dfbc &&_acf ==_afd ))||(!_bf &&(_gf .Abs (float64 (_geef )-float64 (_cgf ))/float64 (_gf .MaxUint16 )> 0.03||_gf .Abs (float64 (_dac )-float64 (_dfbc ))/float64 (_gf .MaxUint16 )> 0.03||_gf .Abs (float64 (_afd )-float64 (_acf ))/float64 (_gf .MaxUint16 )> 0.03)){_geed =true ;
-break ;};};if _geed {break ;};_bc =_ee ;};return float64 (_eab .Max .Y -_bc )/float64 (_eab .Max .Y );};
+// SetLandscapeOrientation sets document landscape page orientation.
+func (_gf *Document )SetLandscapeOrientation (){_gf ._bd =_cgf .Landscape };var _aa *_de .Client ;
+
+// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
+func (_fed *Document )SetStructureType (structureType _ae .StructureType ){};
 
 // ConnectOptions creates UniHTML HTTP Client and tries to establish connection with the server.
-func ConnectOptions (o Options )error {_bgb =_ac .New (_ac .Options {Hostname :o .Hostname ,Port :o .Port ,HTTPS :o .Secure });_ae ,_gde :=_f .WithTimeout (_f .Background (),_ge .Second *5);defer _gde ();if _bge :=_bgb .HealthCheck (_ae );_bge !=nil {return _bge ;
+func ConnectOptions (o Options )error {_aa =_de .New (_de .Options {Hostname :o .Hostname ,Port :o .Port ,HTTPS :o .Secure });_fb ,_ba :=_cf .WithTimeout (_cf .Background (),_ea .Second *5);defer _ba ();if _df :=_aa .HealthCheck (_fb );_df !=nil {return _df ;
 };return nil ;};
+
+// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
+func (_caab *Document )GenerateKDict ()(*_ae .KDict ,error ){return nil ,nil };
+
+// WaitVisible waits for the provided selector to be ready.
+// A selector might be  i.e.  `#example` for id  and `.example` for classes. The second parameter defines how to match given selector.
+func (_gad *Document )WaitVisible (sel string ,by ..._ee .ByType ){_bgbe :=_ee .BySearch ;if len (by )> 0{_bgbe =by [0];};_gad ._dc =append (_gad ._dc ,_de .BySelector {Selector :sel ,By :_bgbe });};
+
+// Document is HTML document wrapper that is used for extracting and converting HTML document into PDF pages.
+type Document struct{_fc _ce .Content ;_fcc margins ;_gd _b .Positioning ;_aca ,_cd float64 ;_bb _cgf .PageSize ;_dbf ,_fccc _cgf .Length ;_bd _cgf .Orientation ;_cdc bool ;_fbf _ea .Duration ;_dea []_de .BySelector ;_dc []_de .BySelector ;_ef *_ea .Duration ;
+};
 
 // Options are the HTML Client options used for establishing the connection.
 type Options struct{
@@ -112,31 +130,17 @@ Port int ;
 Secure bool ;
 
 // Prefix is an option setting used when the server is working with the URI prefix. Default Value: ''.
-Prefix string ;};
+Prefix string ;};func (_efe *Document )extract (_ecb _cf .Context ,_af ,_bgg _cgf .Length ,_eea margins )([]*_ae .PdfPage ,error ){_cge :=_de .BuildHTMLQuery ().SetContent (_efe ._fc ).PageSize (_efe ._bb ).PaperWidth (_af ).PaperHeight (_bgg ).Orientation (_efe ._bd ).MarginLeft (_eea .Left ).MarginRight (_eea .Right ).MarginTop (_eea .Top ).MarginBottom (_eea .Bottom ).TimeoutDuration (_efe .getTimeoutDuration ()).WaitTime (_efe ._fbf );
+for _ ,_fad :=range _efe ._dea {_cge .WaitReady (_fad .Selector ,_fad .By );};for _ ,_cea :=range _efe ._dc {_cge .WaitVisible (_cea .Selector ,_cea .By );};_eag ,_gfa :=_cge .Query ();if _gfa !=nil {return nil ,_gfa ;};var _cfc _cf .CancelFunc ;if _efe ._ef !=nil {_ecb ,_cfc =_cf .WithTimeout (_ecb ,*_efe ._ef );
+}else {_ecb ,_cfc =_cf .WithTimeout (_ecb ,_ea .Second *15);};defer _cfc ();_acg ,_gfa :=_aa .ConvertHTML (_ecb ,_eag );if _gfa !=nil {return nil ,_gfa ;};_fba :=_cg .NewReader (_acg .Data );_ded ,_gfa :=_ae .NewPdfReader (_fba );if _gfa !=nil {return nil ,_gfa ;
+};return _ded .PageList ,nil ;};
 
-// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
-func (_ffd *Document )GenerateKDict ()(*_gcb .KDict ,error ){return nil ,nil };var _bgb *_ac .Client ;
+// SetPageHeight sets the page height for given document.
+func (_fe *Document )SetPageHeight (pageHeight _cgf .Length )error {_fe ._fccc =pageHeight ;_fe ._gd =_b .PositionAbsolute ;return nil ;};
 
-// SetPos sets the absolute position. Changes object positioning to absolute.
-func (_cdb *Document )SetPos (x ,y float64 ){_cdb ._gg =_ca .PositionAbsolute ;_cdb ._af =x ;_cdb ._gfc =y ;};
+// SetTimeoutDuration sets the timeout duration
+// the default timeout is 15 seconds.
+func (_fdf *Document )SetTimeoutDuration (duration _ea .Duration ){_fdf ._ef =&duration };
 
-// WaitVisible waits for the provided selector to be ready.
-// A selector might be  i.e.  `#example` for id  and `.example` for classes. The second parameter defines how to match given selector.
-func (_gccb *Document )WaitVisible (sel string ,by ..._gff .ByType ){_ff :=_gff .BySearch ;if len (by )> 0{_ff =by [0];};_gccb ._egb =append (_gccb ._egb ,_ac .BySelector {Selector :sel ,By :_ff });};
-
-// ContainerComponent implements creator.containerElement interface.
-func (_caf *Document )ContainerComponent (container _ca .Drawable )(_ca .Drawable ,error ){switch container .(type ){case *_ca .Chapter :default:return nil ,_eb .Errorf ("\u0075\u006e\u0069\u0068t\u006d\u006c\u002e\u0044\u006f\u0063\u0075\u006d\u0065n\u0074\u0020\u0063\u0061\u006e\u0027\u0074\u0020\u0062\u0065\u0020\u0061\u0020\u0063\u006f\u006d\u0070\u006fn\u0065\u006e\u0074\u0020\u006ff\u0020\u0074\u0068\u0065\u0020\u0025\u0054\u0020\u0063\u006f\u006e\u0074\u0061\u0069\u006e\u0065\u0072",container );
-};return _caf ,nil ;};
-
-// SetMarginBottom sets the left margin.
-func (_cffb *Document )SetMarginBottom (margin _gd .Length ){_cffb ._gee .Bottom =margin };
-
-// This method is not supported by Document component and exists solely to satisfy the Drawable interface.
-func (_bca *Document )SetMarkedContentID (id int64 ){};
-
-// Document is HTML document wrapper that is used for extracting and converting HTML document into PDF pages.
-type Document struct{_cf _c .Content ;_gee margins ;_gg _ca .Positioning ;_af ,_gfc float64 ;_fd _gd .PageSize ;_bb ,_ggg _gd .Length ;_ed _gd .Orientation ;_cff bool ;_dc _ge .Duration ;_gcba []_ac .BySelector ;_egb []_ac .BySelector ;_edf *_ge .Duration ;
-};var ErrNoClient =_bg .New ("\u0055n\u0069\u0048\u0054\u004d\u004c\u0020\u0063\u006c\u0069\u0065\u006et\u0020\u006e\u006f\u0074\u0020\u0066\u006f\u0075\u006e\u0064");
-
-// WaitTime sets the waiting time before the webpage is rendered to PDF.
-func (_cdg *Document )WaitTime (duration _ge .Duration ){_cdg ._dc =duration };
+// SetMarginLeft sets the left margin.
+func (_dcb *Document )SetMarginLeft (margin _cgf .Length ){_dcb ._fcc .Left =margin };
