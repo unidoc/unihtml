@@ -10,8 +10,8 @@
 // terms that can be accessed at https://unidoc.io/eula/
 
 // Package common contains common properties used by the subpackages.
-package common ;import _g "time";const _cc =8;var ReleasedAt =_g .Date (_ec ,_cc ,_d ,_dc ,_ccf ,0,0,_g .UTC );const _dc =14;
+package common ;import _f "time";const Version ="\u0030\u002e\u0031\u0038\u002e\u0030";const _d ="\u0032\u0020\u004aan\u0075\u0061\u0072\u0079\u0020\u0032\u0030\u0030\u0036\u0020\u0061\u0074\u0020\u0031\u0035\u003a\u0030\u0034";const _b =11;const _fd =17;
+
 
 // UtcTimeFormat returns a formatted string describing a UTC timestamp.
-func UtcTimeFormat (t _g .Time )string {return t .Format (_e )+"\u0020\u0055\u0054\u0043"};const Version ="\u0030\u002e\u0031\u0037\u002e\u0030";const _d =20;const _e ="\u0032\u0020\u004aan\u0075\u0061\u0072\u0079\u0020\u0032\u0030\u0030\u0036\u0020\u0061\u0074\u0020\u0031\u0035\u003a\u0030\u0034";
-const _ec =2026;const _ccf =13;
+func UtcTimeFormat (t _f .Time )string {return t .Format (_d )+"\u0020\u0055\u0054\u0043"};const _cg =2026;const _a =13;var ReleasedAt =_f .Date (_cg ,_b ,_fd ,_fe ,_a ,0,0,_f .UTC );const _fe =14;
